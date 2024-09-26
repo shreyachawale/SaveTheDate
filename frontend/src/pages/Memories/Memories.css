@@ -1,0 +1,48 @@
+.memories-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.my-masonry-grid {
+    display: flex;
+    margin-left: -20px; /* gutter size offset */
+    width: auto;
+    position: relative;
+}
+
+.my-masonry-grid_column {
+    padding-left: 20px; /* gutter size */
+    background-clip: padding-box;
+}
+
+.memory-item {
+    margin-bottom: 30px;
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.memory-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effects */
+.memory-item:hover {
+    transform: scale(1.1);
+    z-index: 2; /* Bring hovered item above others */
+}
+
+/* No dimming or shrinking of other images */
+.memory-item img {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.memory-item:hover img {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
