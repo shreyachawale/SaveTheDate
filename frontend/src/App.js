@@ -10,6 +10,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />    {/* Home page */}
           <Route path="/host" element={<HostForm />} /> {/* HostForm page */}
+          {/* <Route path="/faqs" element={<FAQsPage/>} />
+          <Route path="/memories" element={<Memories.jsx />} /> */}
         </Routes>
       </div>
     </Router>
