@@ -1,0 +1,51 @@
+.faq-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .faq-section h2 {
+    font-size: 24px;
+    color: #2F4F4F; /* Wedding theme color */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .faq-box {
+    padding: 10px;
+  }
+  
+  .faq-item {
+    margin-bottom: 10px;
+  }
+  
+  .faq-item h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f4f0e2;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .faq-item h3.active {
+    background-color: #E4D6A7;
+  }
+  
+  .faq-item p {
+    margin-top: 5px;
+    padding-left: 20px;
+    font-size: 16px;
+  }
+  
+  .faq-item span {
+    font-size: 24px;
+  }
+  
