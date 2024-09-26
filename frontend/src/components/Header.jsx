@@ -3,7 +3,6 @@ import { Heart, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -46,7 +45,9 @@ export default function Header() {
           whileTap={{ scale: 0.95 }}
           className="hidden md:inline-flex bg-[#E4D6A7] text-black px-6 py-2 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300"
         >
-          Become a Host
+          <Link to="/host" className="w-full h-full flex justify-center items-center">
+            Become a Host
+          </Link>
         </motion.button>
         <button
           className="md:hidden text-black hover:text-[#E4D6A7] transition-colors duration-300"
@@ -102,7 +103,9 @@ export default function Header() {
                 whileTap={{ scale: 0.95 }}
                 className="w-full bg-[#E4D6A7] text-black px-6 py-3 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300 mt-8"
               >
-                Become a Host
+                <Link to="/host" className="w-full h-full flex justify-center items-center">
+                  Become a Host
+                </Link>
               </motion.button>
             </div>
           </motion.div>
