@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function WeddingEventForm() {
+export default function HostForm() {
   return (
     <div className="min-h-screen bg-stone-100 flex justify-center p-12">
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-xl p-12 space-y-12">
