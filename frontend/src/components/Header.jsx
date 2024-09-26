@@ -7,11 +7,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
   }, [isMenuOpen]);
 
   const menuVariants = {
@@ -20,7 +16,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-md fixed w-full z-50">
+    <header className="bg-white shadow-md w-full z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2 group">
           <img src="/images/logo_wedding.png" alt="logo" />
@@ -29,18 +25,16 @@ export default function Header() {
           </span>
         </Link>
         <nav className="hidden md:flex space-x-8">
-          {["Destinations", "Experiences", "About Us", "Contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                to={`/${item.toLowerCase().replace(" ", "-")}`}
-                className="text-black hover:text-[#E4D6A7] transition-colors duration-300 relative group"
-              >
-                {item}
-                <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-[#E4D6A7] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
-              </Link>
-            )
-          )}
+          {["Weddings", "Memories", "FAQs", "Contact Us"].map((item) => (
+            <Link
+              key={item}
+              to={`/${item.toLowerCase().replace(" ", "-")}`}
+              className="text-black hover:text-[#E4D6A7] transition-colors duration-300 relative group"
+            >
+              {item}
+              <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-[#E4D6A7] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
+            </Link>
+          ))}
         </nav>
 
         <Link to="/host">
@@ -91,18 +85,16 @@ export default function Header() {
                 </button>
               </div>
               <nav className="flex flex-col space-y-6 flex-grow justify-center">
-                {["Destinations", "Experiences", "About Us", "Contact"].map(
-                  (item) => (
-                    <Link
-                      key={item}
-                      to={`/${item.toLowerCase().replace(" ", "-")}`}
-                      className="text-black hover:text-[#E4D6A7] transition-colors duration-300 text-2xl font-semibold"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item}
-                    </Link>
-                  )
-                )}
+                {["Weddings", "Memories", "FAQs", "Contact Us"].map((item) => (
+                  <Link
+                    key={item}
+                    to={`/${item.toLowerCase().replace(" ", "-")}`}
+                    className="text-black hover:text-[#E4D6A7] transition-colors duration-300 text-2xl font-semibold"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item}
+                  </Link>
+                ))}
               </nav>
               <motion.button
                 whileHover={{ scale: 1.05 }}

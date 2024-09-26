@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CalendarDays, Clock, MapPin, Music, Utensils, Heart, Mail, Phone, User, Gift, Plane, Hotel, Camera, ChevronLeft, ChevronRight, TicketIcon  } from "lucide-react";
 import weddet1 from '../assets/weddet1.jpg';
 import weddet2 from '../assets/weddet2.jpg';
+import { useNavigate } from "react-router-dom";
 
 export default function EnhancedWeddingDetails() {
   const [ticketsLeft, setTicketsLeft] = useState(50);
@@ -12,7 +13,12 @@ export default function EnhancedWeddingDetails() {
     { src: weddet2, alt: "Sarah and John 1" },
     { src: weddet1, alt: "Sarah and John 2" },
   ];
+  const navigate = useNavigate(); // Initialize navigate
 
+  const handleTicketClick = () => {
+    setTicketsLeft((prev) => Math.max(0, prev - 1)); // Decrease tickets count
+    navigate('/payment'); // Redirect to payment form after clicking
+  };
   const weddingDays = [
     {
       day: "Day 1",
@@ -102,21 +108,10 @@ export default function EnhancedWeddingDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-100 via-white to-rose-100">
-      <header className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 transition-all duration-300">
-        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-primary">Sarah & John</h1>
-          <ul className="flex space-x-6">
-            <li><a href="#about" className="text-muted-foreground hover:text-primary transition-colors"><User /> About</a></li>
-            <li><a href="#details" className="text-muted-foreground hover:text-primary transition-colors"><CalendarDays /> Details</a></li>
-            <li><a href="#travel" className="text-muted-foreground hover:text-primary transition-colors"><Plane /> Travel</a></li>
-            <li><a href="#gifts" className="text-muted-foreground hover:text-primary transition-colors"><Gift /> Gifts</a></li>
-          </ul>
-        </nav>
-      </header>
-
-      <main className="container mx-auto px-4 py-12">
+  
+      <main className="container my-auto mx-auto px-4 py-12">
         <section className="mb-20 relative">
-          <div className="relative h-[600px] rounded-lg overflow-hidden group">
+          <div className="relative h-[600px] mt-20 rounded-lg overflow-hidden group">
             {carouselImages.map((image, index) => (
               <div
                 key={index}
@@ -158,8 +153,8 @@ export default function EnhancedWeddingDetails() {
                 Sarah and John's love story began five years ago when they met at a local coffee shop. Their shared passion for travel and adventure quickly bonded them...
               </p>
               <button
-                className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                onClick={() => setTicketsLeft(prev => Math.max(0, prev - 1))}
+                className="bg-primary hover:bg-primary/90 text-black text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={handleTicketClick} // Attach handleTicketClick function
               >
                 <TicketIcon /> Get Your Ticket ({ticketsLeft} left)
               </button>
