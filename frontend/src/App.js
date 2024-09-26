@@ -10,6 +10,7 @@ import {useEffect, useState} from 'react';
 
 
 import {loadStripe} from '@stripe/stripe-js';// Import the CheckoutWrapper
+import PaymentForm from './pages/PaymentForm';
 
 function App() {
   const [ stripePromise, setStripePromise ] = useState(null);
@@ -29,6 +30,8 @@ function App() {
           {/*<Route path="/checkout" element={<Payment stripePromise={stripePromise} />} />*/}
           {/*<Route path="/completion" element={<Completion stripePromise={stripePromise} />} />*/}
           <Route path="/weddingdetails" element={<EnhancedWeddingDetails />} />
+          <Route path="/paymentform" element={<PaymentForm />} />
+          
         </Routes>
       </div>
     </Router>

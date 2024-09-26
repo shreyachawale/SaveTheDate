@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CalendarDays, Clock, MapPin, Music, Utensils, Heart, Mail, Phone, User, Gift, Plane, Hotel, Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, Clock, MapPin, Music, Utensils, Heart, Mail, Phone, User, Gift, Plane, Hotel, Camera, ChevronLeft, ChevronRight, TicketIcon  } from "lucide-react";
 import weddet1 from '../assets/weddet1.jpg';
 import weddet2 from '../assets/weddet2.jpg';
 
@@ -106,10 +106,10 @@ export default function EnhancedWeddingDetails() {
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-primary">Sarah & John</h1>
           <ul className="flex space-x-6">
-            <li><a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a></li>
-            <li><a href="#details" className="text-muted-foreground hover:text-primary transition-colors">Details</a></li>
-            <li><a href="#travel" className="text-muted-foreground hover:text-primary transition-colors">Travel</a></li>
-            <li><a href="#gifts" className="text-muted-foreground hover:text-primary transition-colors">Gifts</a></li>
+            <li><a href="#about" className="text-muted-foreground hover:text-primary transition-colors"><User /> About</a></li>
+            <li><a href="#details" className="text-muted-foreground hover:text-primary transition-colors"><CalendarDays /> Details</a></li>
+            <li><a href="#travel" className="text-muted-foreground hover:text-primary transition-colors"><Plane /> Travel</a></li>
+            <li><a href="#gifts" className="text-muted-foreground hover:text-primary transition-colors"><Gift /> Gifts</a></li>
           </ul>
         </nav>
       </header>
@@ -144,7 +144,7 @@ export default function EnhancedWeddingDetails() {
             </button>
             <div className="absolute bottom-8 left-8 right-8 text-white">
               <h1 className="text-6xl font-bold mb-4 text-white bg-clip-text">Sarah & John's Wedding</h1>
-              <p className="text-xl mb-6">Join us in celebrating our love</p>
+              <p className="text-xl mb-6"><Heart /> Join us in celebrating our love</p>
               <CountdownTimer />
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function EnhancedWeddingDetails() {
         <section id="about" className="mb-20">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <h2 className="text-4xl font-bold mb-6 text-primary">Our Love Story</h2>
+              <h2 className="text-4xl font-bold mb-6 text-primary"><User /> Our Love Story</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Sarah and John's love story began five years ago when they met at a local coffee shop. Their shared passion for travel and adventure quickly bonded them...
               </p>
@@ -161,7 +161,7 @@ export default function EnhancedWeddingDetails() {
                 className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => setTicketsLeft(prev => Math.max(0, prev - 1))}
               >
-                Get Your Ticket
+                <TicketIcon /> Get Your Ticket ({ticketsLeft} left)
               </button>
             </div>
             <div className="relative group">
@@ -176,18 +176,24 @@ export default function EnhancedWeddingDetails() {
         </section>
 
         <section id="details" className="mb-20">
-          <h2 className="text-4xl font-bold mb-10 text-center text-primary">Wedding Details</h2>
+          <h2 className="text-4xl font-bold mb-10 text-center text-primary"><CalendarDays /> Wedding Details</h2>
           <div className="tabs">
             <div className="tabs-list grid grid-cols-3 mb-8">
-              <button className="tabs-trigger">Overview</button>
-              <button className="tabs-trigger">Day 1</button>
-              <button className="tabs-trigger">Day 2</button>
+              <button className="tabs-trigger"><MapPin /> Overview</button>
+              <button className="tabs-trigger"><Clock /> Day 1</button>
+              <button className="tabs-trigger"><Clock /> Day 2</button>
             </div>
             <div className="tabs-content">
-              {weddingDays.map((day, index) => (
-                <div key={index} className="card">
-                  <h3>{day.event}</h3>
-                  <p>{day.description}</p>
+              {weddingDays.map((day) => (
+                <div key={day.day} className="mb-12">
+                  <h3 className="text-3xl font-semibold mb-4 text-primary"><CalendarDays /> {day.day}</h3>
+                  <p className="text-muted-foreground">{day.description}</p>
+                  <p className="flex items-center mt-4 text-muted-foreground"><MapPin className="mr-2" /> {day.place}</p>
+                  <p className="flex items-center mt-2 text-muted-foreground"><Clock className="mr-2" /> Starts at: {day.startTime}</p>
+                  <p className="flex items-center mt-2 text-muted-foreground"><Music className="mr-2" /> Music & Dancing: {day.musicDancing ? 'Yes' : 'No'}</p>
+                  <p className="flex items-center mt-2 text-muted-foreground"><Utensils className="mr-2" /> Dress Code: {day.dressCode}</p>
+                  <p className="flex items-center mt-2 text-muted-foreground"><Hotel className="mr-2" /> Accommodation: {day.accommodation ? 'Available' : 'Not Available'}</p>
+                  <p className="flex items-center mt-2 text-muted-foreground"><Plane className="mr-2" /> Transportation: {day.transportation ? 'Available' : 'Not Available'}</p>
                 </div>
               ))}
             </div>
