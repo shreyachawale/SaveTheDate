@@ -1,0 +1,64 @@
+.image-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four equal columns */
+    grid-template-rows: repeat(4, auto); /* Four rows, each auto-sized */
+    gap: 1rem; /* Space between cards */
+    padding: 2rem; /* Uniform padding around the container */
+    margin: 0 auto; /* Center the container */
+    max-width: 1200px; /* Set a maximum width for better alignment */
+  }
+  
+  .image-card {
+    position: relative;
+    width: 100%; /* Make the width flexible to fill the grid */
+    height: 30rem; /* Keep the height the same */
+    border-radius: 0.75rem; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Softer box shadow */
+    overflow: hidden; /* Prevent overflow */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for hover effects */
+  }
+  
+  .image-card img {
+    width: 100%;
+    height: 100%; /* Set height to 100% to fill the card */
+    object-fit: cover; /* Ensure the image covers the container */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for the image */
+  }
+  
+  .image-card:hover img {
+    transform: scale(1.05); /* Slightly zoom in on hover */
+  }
+  
+  .image-card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center;
+    justify-content: flex-end; /* Align items at the bottom */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    color: white;
+    padding: 0.75rem; /* Moderate padding */
+    text-align: center;
+  }
+  
+  .image-card-content h3 {
+    font-size: 1.5rem; /* Reasonable font size for title */
+    font-weight: bold;
+    font-family: 'Georgia', serif; /* Custom font for a wedding feel */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Shadow for better readability */
+    margin-bottom: 0.5rem; /* Slightly increased spacing below the h3 */
+  }
+  
+  .image-card-content p {
+    font-size: 1.125rem; /* Reasonable font size for text */
+    font-weight: 300; /* Light font weight */
+    margin: 0; /* Remove default margins */
+    line-height: 1.3; /* Adjust line height for better readability */
+  }
+  
+  .image-card-content p.date {
+    font-size: 1rem; /* Font size for date */
+    font-style: italic;
+  }
+  
