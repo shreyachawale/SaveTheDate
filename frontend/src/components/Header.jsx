@@ -29,7 +29,7 @@ export default function Header() {
           </span>
         </Link>
         <nav className="hidden md:flex space-x-8">
-          {['Destinations', 'Experiences', 'About Us', 'Contact'].map((item) => (
+          {['Memories', 'FAQs', 'Weddings', 'Contact'].map((item) => (
             <Link
               key={item}
               to={`/${item.toLowerCase().replace(' ', '-')}`}
@@ -87,7 +87,7 @@ export default function Header() {
                 </button>
               </div>
               <nav className="flex flex-col space-y-6 flex-grow justify-center">
-                {['Destinations', 'Experiences', 'About Us', 'Contact'].map((item) => (
+                {['Memories', 'FAQs', 'Weddings', 'Contact'].map((item) => (
                   <Link
                     key={item}
                     to={`/${item.toLowerCase().replace(' ', '-')}`}
