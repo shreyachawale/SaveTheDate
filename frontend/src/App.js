@@ -2,8 +2,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HostForm from './pages/HostForm';
 import HomePage from './pages/MainPage';
-import Payment from './pages/Payment'
-import Completion from './pages/Completion'
+import EnhancedWeddingDetails from './pages/WeddingDetails';
+
+//import Completion from './pages/Completion'
 
 import {useEffect, useState} from 'react';
 
@@ -25,8 +26,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/host" element={<HostForm />} />
-          <Route path="/checkout" element={<Payment stripePromise={stripePromise} />} />
-          <Route path="/completion" element={<Completion stripePromise={stripePromise} />} />
+          {/*<Route path="/checkout" element={<Payment stripePromise={stripePromise} />} />*/}
+          {/*<Route path="/completion" element={<Completion stripePromise={stripePromise} />} />*/}
+          <Route path="/weddingdetails" element={<EnhancedWeddingDetails />} />
         </Routes>
       </div>
     </Router>
