@@ -1,0 +1,48 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fef1e6; /* Light peach wedding background */
+    padding: 40px;
+  }
+  
+  .faq-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+
+ /* Main heading styles */
+ h1 {
+    font-size: 36px; /* Adjust size as needed */
+    font-family: 'Georgia', serif; /* Elegant font choice */
+    text-align: center;
+    margin: 10px 0; /* Reduced space above and below */
+    color: #4A4A4A; /* Dark gray color for a classic look */
+    opacity: 0; /* Start hidden */
+    transform: translateY(20px); /* Start lower */
+    animation: fadeInUp 0.8s forwards 0.2s; /* Animation with delay */
+  }
+  
+  /* FAQ title styles */
+  .faq-title {
+    font-size: 28px; /* Slightly smaller than the main title */
+    font-family: 'Georgia', serif; /* Consistent font choice */
+    text-align: center;
+    margin: 5px 0; /* Reduced space above and below */
+    color: #D57C28; /* Warm, inviting color (like a rich gold) */
+    border-bottom: 2px solid #D57C28; /* Underline for emphasis */
+    padding-bottom: 8px; /* Space between title and underline */
+    opacity: 0; /* Start hidden */
+    transform: translateY(20px); /* Start lower */
+    animation: fadeInUp 0.8s forwards 0.4s; /* Animation with delay */
+  }
+  
+  /* Keyframes for fade-in and slide-up effect */
+  @keyframes fadeInUp {
+    to {
+      opacity: 1; /* Fully visible */
+      transform: translateY(0); /* Move to original position */
+    }
+  }
+  
