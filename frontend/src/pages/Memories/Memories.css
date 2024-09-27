@@ -32,7 +32,7 @@
 
 /* Hover effects */
 .memory-item:hover {
-    transform: scale(1.1);
+    transform: scale(1.03);
     z-index: 2; /* Bring hovered item above others */
 }
 
