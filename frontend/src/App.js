@@ -9,6 +9,8 @@ import Header from './components/Header';
 import Memories from './pages/Memories/Memories';
 import FAQsPage from './pages/FAQsPage/FAQsPage';
 import UserDashboard from './pages/HostDashboard';
+import AuthPage from './pages/HostAuth';
+import HostMainPage from './pages/HostMain';
 // import { loadStripe } from '@stripe/stripe-js'; // Import the CheckoutWrapper
 // import { useEffect, useState } from 'react';
 
@@ -28,6 +30,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />    {/* Home page */}
           <Route path="/host" element={<HostForm />} /> {/* HostForm page */}
+          <Route path="/host-auth" element={<AuthPage />} />
+          <Route path="/host-main/:userName" element={<HostMainPage />} /> {/* HostForm page */}
           <Route path="/wedding-details" element={<EnhancedWeddingDetails />} /> {/* Wedding Details page */}
           <Route path="/paymentform" element={<PaymentForm />} /> {/* Payment form page */}
           <Route path="/weddings" element={<ImageCard />} /> {/* Payment form page */}

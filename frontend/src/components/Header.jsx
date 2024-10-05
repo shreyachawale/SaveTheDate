@@ -5,14 +5,31 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hostName, setHostName] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
+
+    // Get host name from local storage
+    const storedHostName = localStorage.getItem("hostName");
+
+    if (storedHostName) {
+      setHostName(storedHostName);
+    }
   }, [isMenuOpen]);
 
   const menuVariants = {
     closed: { opacity: 0, x: "-100%" },
     open: { opacity: 1, x: 0 },
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "";
+    const nameParts = name.split(" ");
+    return nameParts
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase();
   };
 
   return (
@@ -37,15 +54,32 @@ export default function Header() {
           ))}
         </nav>
 
-        <Link to="/host">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="hidden md:inline-flex bg-[#E4D6A7] text-black px-6 py-2 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300"
-          >
-            Become a Host
-          </motion.button>
-        </Link>
+        {hostName ? (
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#E4D6A7] text-black font-bold">
+              {getInitials(hostName)}
+            </div>
+            <Link to="/host-main">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="hidden md:inline-flex bg-[#E4D6A7] text-black px-6 py-2 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300"
+              >
+                Host Dashboard
+              </motion.button>
+            </Link>
+          </div>
+        ) : (
+          <Link to="/host-auth">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="hidden md:inline-flex bg-[#E4D6A7] text-black px-6 py-2 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300"
+            >
+              Become a Host
+            </motion.button>
+          </Link>
+        )}
 
         <button
           className="md:hidden text-black hover:text-[#E4D6A7] transition-colors duration-300"
@@ -101,7 +135,7 @@ export default function Header() {
                 whileTap={{ scale: 0.95 }}
                 className="w-full bg-[#E4D6A7] text-black px-6 py-3 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300 mt-8"
               >
-                <Link to="/host" className="w-full h-full flex justify-center items-center">
+                <Link to="/host-auth" className="w-full h-full flex justify-center items-center">
                   Become a Host
                 </Link>
               </motion.button>

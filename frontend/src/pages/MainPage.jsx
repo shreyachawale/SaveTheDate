@@ -1,7 +1,7 @@
 // HomePage.js
 import Carousel from '../components/Carousal'
-import Header from '../components/Header'
-import UserDashboard from './HostDashboard'
+import TestimonialsPage from '../components/Testimonials'
+import AuthPage from './HostAuth'
 
 export default function HomePage() {
   return (
@@ -9,11 +9,13 @@ export default function HomePage() {
       <main className="flex-grow">
         <Carousel />
       </main>
+      <TestimonialsPage/>
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
           &copy; 2023 WeddingAbroad. All rights reserved.
         </div>
       </footer>
+      <AuthPage/>
     </div>
   )
 }
