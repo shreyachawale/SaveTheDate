@@ -11,17 +11,17 @@ import FAQsPage from './pages/FAQsPage/FAQsPage';
 import UserDashboard from './pages/HostDashboard';
 import AuthPage from './pages/HostAuth';
 import HostMainPage from './pages/HostMain';
-// import { loadStripe } from '@stripe/stripe-js'; // Import the CheckoutWrapper
-// import { useEffect, useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js'; // Import the CheckoutWrapper
+import { useEffect, useState } from 'react';
 
 function App() {
-  // const [stripePromise, setStripePromise] = useState(null);
+  const [stripePromise, setStripePromise] = useState(null);
 
-  // useEffect(() => {
-  //   fetch("/api/config").then(async (r) => {
-  //     setStripePromise(loadStripe('pk_test_51Q3Aa0C7BPICGXUq8CPyRtBj3SskzQU74LQ6C1eNbX7vfqi4Ht4UncWocrZ47dRH1VL7L2lIwD84JHQPOrKVFXMr00uNsUJpdk'));
-  //   });
-  // }, []);
+  useEffect(() => {
+    fetch("/api/config").then(async (r) => {
+      setStripePromise(loadStripe('pk_test_51Q3Aa0C7BPICGXUq8CPyRtBj3SskzQU74LQ6C1eNbX7vfqi4Ht4UncWocrZ47dRH1VL7L2lIwD84JHQPOrKVFXMr00uNsUJpdk'));
+    });
+  }, []);
 
   return (
     <Router>

@@ -1,5 +1,6 @@
 // HomePage.js
 import Carousel from '../components/Carousal'
+import PaymentButton from '../components/PaymentButton'
 import TestimonialsPage from '../components/Testimonials'
 import AuthPage from './HostAuth'
 
@@ -16,6 +17,7 @@ export default function HomePage() {
         </div>
       </footer>
       <AuthPage/>
+      <PaymentButton/>
     </div>
   )
 }
