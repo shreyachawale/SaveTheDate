@@ -1,5 +1,8 @@
 const express = require('express');
+const { register, login } = require('../controllers/authcontrollers');
+const { checkuser } = require('../middleware/AuthMiddleware');
 require('dotenv').config()
+
 
 const payment = process.env.STRIPE_SECRET_KEY
 const stripe = require('stripe')(`${payment}`); // Replace with your actual secret key
@@ -33,5 +36,9 @@ router.post('/create-checkout-session', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+router.post('/',checkuser)
+router.post('/register',register)
+router.post('/login',login)
+
 
 module.exports = router;

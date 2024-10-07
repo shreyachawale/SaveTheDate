@@ -1,12 +1,16 @@
 const express = require('express');
 const connectDB = require('./config/db');
-const hostRoutes = require('./routes/hostRoutes');
+const hostRoutes = require('./routes/AuthRoutes');
 const cors = require('cors');
 const router = require('./routes/router');
+const AuthRoutes=require('./routes/AuthRoutes')
+const cookieparser=require('cookie-parser');
 
 const app = express();
 app.use(cors({
   origin: 'http://localhost:3000',
+  method:["GET","POST"],
+  credentials:true
 }));
 
 // Connect to MongoDB
@@ -16,8 +20,9 @@ connectDB();
 app.use(express.json());
 
 // Routes
-app.use('/api/hosts', hostRoutes);
-app.use('/api/payments', router); // Added payment route
+app.use(cookieparser())
+
+app.use('/', router); // Added payment route
 
 // Start Server
 const PORT = process.env.PORT || 5000;
