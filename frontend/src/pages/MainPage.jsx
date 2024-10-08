@@ -15,13 +15,22 @@ export default function HomePage() {
   const [cookies, setCookie,removeCookie] = useCookies([]);
   useEffect(() => {
     const verifyUser = async () => {
-      if (!cookies.jwt) {
-        navigate("/login");
-      } 
       
-    };
+        const{data}=await axios.post('http://localhost:8000/',{},{withCredentials:true})
+        if(!data.status){
+          removeCookie("jwt")
+          navigate('/login')
+        }else{ toast(`HEY ${data.user}`)}
+      }
+        
+      
+  
+    const logout=()=>{
+      removeCookie("jwt")
+      navigate("/register")
+    }
     verifyUser();
-  }, [cookies,setCookie,removeCookie]);
+  }, [cookies,setCookie,removeCookie,navigate])
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">

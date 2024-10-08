@@ -9,14 +9,19 @@ if(token){
             next();
 
         }else{
-            const user=await user.findById(decodedToken.id);
+            try{
+            const user= await user.findById(decodedToken.id);
             if(user)res.json({status:true,user:user.email})
                 else{
                     res.json({status:false});
                     next();
             }
+        }catch(err){
+            console.log(err)
         }
-    });
+}
+
+});
 
 }
 else{
