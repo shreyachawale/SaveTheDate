@@ -1,163 +1,389 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import {
+  TextField,
+  Button,
+  Grid,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+  Card,
+  CardContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function HostForm() {
-  const navigate = useNavigate();
+function WeddingForm() {
+  const [formData, setFormData] = useState({
+    groomName: '',
+    brideName: '',
+    tickets: '',
+    ticketPrice: '',
+    preWeddingImages: [],
+    ourStory: '',
+    languages: '',
+    menu: 'veg',
+    alcohol: 'no',
+    transportation: 'not included',
+    accommodation: 'not included',
+    day1: {
+      eventName: '',
+      place: '',
+      date: '',
+      description: '',
+      music: 'no',
+      dressCode: '',
+      time: '',
+    },
+    day2: {
+      eventName: '',
+      place: '',
+      date: '',
+      description: '',
+      music: 'no',
+      dressCode: '',
+      time: '',
+    },
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Here, you can handle form submission logic (e.g., API calls).
-    
-    // After successful submission, redirect to UserDashboard
-    navigate("/userdashboard");
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'preWeddingImages') {
+      setFormData((prevState) => ({
+        ...prevState,
+        preWeddingImages: [...files],
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
-  const handleBackClick = () => {
-    navigate("/"); // Redirect to main screen on left arrow click
+
+  const handleDayChange = (day, e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [day]: {
+        ...prevState[day],
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form Data:', formData);
   };
 
   return (
-    <div className="min-h-screen bg-stone-100 flex justify-center p-12">
-      <div className="w-full max-w-5xl bg-white rounded-xl shadow-xl p-12 space-y-12">
-        <div className="flex justify-between items-center">
-          <button className="text-4xl text-gray-500 hover:text-gray-700 transition-colors" onClick={handleBackClick} aria-label="Go back">&larr;</button>
-          <h1 className="text-5xl font-bold text-center text-gray-800">Wedding Event</h1>
-          <button className="text-4xl text-gray-500 hover:text-gray-700 transition-colors" aria-label="More options">&#8942;</button>
-        </div>
-        
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-gray-800">Host Your Wedding Event</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Let tourists experience the beauty of Indian weddings. Our platform allows you to host your
-            wedding event and share the rich cultural heritage of Indian weddings with a global audience.
-          </p>
-        </div>
-        
-        <form className="space-y-10" onSubmit={handleSubmit}>
-          {/* Event Name */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            <div className="col-span-2">
-              <label htmlFor="eventName" className="block text-xl font-medium text-gray-700 mb-2">Event Name</label>
-              <input type="text" id="eventName" placeholder="Rohan & Priya's Wedding" className="text-lg border rounded p-2 w-full" required />
-            </div>
-          </div>
+    <form onSubmit={handleSubmit}>
+      <Typography variant="h4" gutterBottom align="center" style={{ fontWeight: 'bold', marginBottom: '20px' }}>
+        Wedding Details Form
+      </Typography>
 
-          {/* Description */}
-          <div className="col-span-2">
-            <label htmlFor="description" className="block text-xl font-medium text-gray-700 mb-2">Description</label>
-            <textarea
-              id="description"
-              placeholder="A grand celebration of love and tradition, featuring vibrant ceremonies, traditional attire, and exquisite cuisine."
-              className="text-lg border rounded p-2 w-full min-h-[100px]"
-              required
+      <Grid container spacing={3} style={{ maxWidth: '900px', margin: '0 auto' }}>
+        {/* Groom and Bride Names */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Groom's Name"
+            name="groomName"
+            value={formData.groomName}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Bride's Name"
+            name="brideName"
+            value={formData.brideName}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+
+        {/* Tickets and Price */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Number of Tickets"
+            type="number"
+            name="tickets"
+            value={formData.tickets}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Amount per Ticket"
+            type="number"
+            name="ticketPrice"
+            value={formData.ticketPrice}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+
+        {/* Pre-wedding Images */}
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            component="label"
+            fullWidth
+            style={{ backgroundColor: '#E4D6A7', color: '#000' }} // Updated button color
+          >
+            Upload Pre-Wedding Images
+            <input
+              type="file"
+              name="preWeddingImages"
+              multiple
+              hidden
+              onChange={handleChange}
             />
-          </div>
+          </Button>
+        </Grid>
 
-          {/* Date and Time */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            <div>
-              <label htmlFor="startDate" className="block text-xl font-medium text-gray-700 mb-2">Start Date</label>
-              <input type="date" id="startDate" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="endDate" className="block text-xl font-medium text-gray-700 mb-2">End Date</label>
-              <input type="date" id="endDate" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="startTime" className="block text-xl font-medium text-gray-700 mb-2">Start Time</label>
-              <input type="time" id="startTime" defaultValue="10:00" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="endTime" className="block text-xl font-medium text-gray-700 mb-2">End Time</label>
-              <input type="time" id="endTime" defaultValue="23:00" className="text-lg border rounded p-2 w-full" required />
-            </div>
-          </div>
+        {/* Our Story */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Our Story"
+            name="ourStory"
+            value={formData.ourStory}
+            onChange={handleChange}
+            multiline
+            rows={3}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
 
-          {/* Venue Information */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            <div className="col-span-2">
-              <label htmlFor="venueName" className="block text-xl font-medium text-gray-700 mb-2">Venue Name</label>
-              <input type="text" id="venueName" placeholder="Taj Palace" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div className="col-span-2">
-              <label htmlFor="address" className="block text-xl font-medium text-gray-700 mb-2">Address</label>
-              <input type="text" id="address" placeholder="Sardar Patel Marg" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="city" className="block text-xl font-medium text-gray-700 mb-2">City</label>
-              <input type="text" id="city" placeholder="New Delhi" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="state" className="block text-xl font-medium text-gray-700 mb-2">State</label>
-              <input type="text" id="state" placeholder="Delhi" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="zipCode" className="block text-xl font-medium text-gray-700 mb-2">Zip Code</label>
-              <input type="text" id="zipCode" placeholder="110021" className="text-lg border rounded p-2 w-full" required />
-            </div>
-          </div>
+        {/* Overview Section */}
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            label="Languages Spoken"
+            name="languages"
+            value={formData.languages}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
 
-          {/* Capacity and Pricing */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            <div>
-              <label htmlFor="maxCapacity" className="block text-xl font-medium text-gray-700 mb-2">Maximum Capacity</label>
-              <input type="number" id="maxCapacity" placeholder="500" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="pricing" className="block text-xl font-medium text-gray-700 mb-2">Pricing Details</label>
-              <input type="text" id="pricing" placeholder="$100 per guest" className="text-lg border rounded p-2 w-full" required />
-            </div>
-          </div>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Menu Offered</InputLabel>
+            <Select
+              name="menu"
+              value={formData.menu}
+              onChange={handleChange}
+            >
+              <MenuItem value="veg">Veg</MenuItem>
+              <MenuItem value="non-veg">Non-Veg</MenuItem>
+              <MenuItem value="jain">Jain</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
-          {/* Currency Selection */}
-          <div>
-            <label className="block text-xl font-medium text-gray-700 mb-4">Currency</label>
-            <div className="flex space-x-8">
-              {["USD", "INR", "EUR", "GBP"].map((currency) => (
-                <div key={currency} className="flex items-center">
-                  <input type="radio" name="currency" value={currency} id={currency} className="mr-2" required />
-                  <label htmlFor={currency} className="text-lg">{currency}</label>
-                </div>
-              ))}
-            </div>
-          </div>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Alcohol Offered</InputLabel>
+            <Select
+              name="alcohol"
+              value={formData.alcohol}
+              onChange={handleChange}
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
-          {/* Host Information */}
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            <div>
-              <label htmlFor="hostName" className="block text-xl font-medium text-gray-700 mb-2">Host Name</label>
-              <input type="text" id="hostName" placeholder="Rohan Sharma" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="hostEmail" className="block text-xl font-medium text-gray-700 mb-2">Host Email</label>
-              <input type="email" id="hostEmail" placeholder="rohan.sharma@example.com" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="hostPhone" className="block text-xl font-medium text-gray-700 mb-2">Host Phone</label>
-              <input type="tel" id="hostPhone" placeholder="+91 98765 43210" className="text-lg border rounded p-2 w-full" required />
-            </div>
-            <div>
-              <label htmlFor="hostIdNumber" className="block text-xl font-medium text-gray-700 mb-2">Host ID Number</label>
-              <input type="text" id="hostIdNumber" placeholder="ABCDE1234F" className="text-lg border rounded p-2 w-full" required />
-            </div>
-          </div>
+        {/* Transportation and Accommodation */}
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Transportation</InputLabel>
+            <Select
+              name="transportation"
+              value={formData.transportation}
+              onChange={handleChange}
+            >
+              <MenuItem value="included">Included</MenuItem>
+              <MenuItem value="not included">Not Included</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
-          {/* Host ID Type */}
-          <div>
-            <label className="block text-xl font-medium text-gray-700 mb-4">Host ID Type</label>
-            <div className="grid grid-cols-3 gap-4">
-              {["Aadhar Card", "PAN Card", "Voter ID", "Passport"].map((idType) => (
-                <div key={idType} className="flex items-center">
-                  <input type="radio" name="hostIdType" value={idType} id={idType} className="mr-2" required />
-                  <label htmlFor={idType} className="text-lg">{idType}</label>
-                </div>
-              ))}
-            </div>
-          </div>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Accommodation</InputLabel>
+            <Select
+              name="accommodation"
+              value={formData.accommodation}
+              onChange={handleChange}
+            >
+              <MenuItem value="included">Included</MenuItem>
+              <MenuItem value="not included">Not Included</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
-          {/* Submit Button */}
-          <button type="submit" className="bg-blue-600 text-white font-semibold py-3 rounded-lg w-full hover:bg-blue-700 transition-colors">Submit</button>
-        </form>
-      </div>
-    </div>
+        {/* Day 1 and Day 2 Accordion */}
+        {['day1', 'day2'].map((day, index) => (
+          <Grid item xs={12} key={day}>
+            <Accordion style={{ boxShadow: 'none', marginBottom: '10px' }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} style={{ backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
+                <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+                  {`Day ${index + 1} Event Details`}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Card style={{ borderRadius: '8px', boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)' }}>
+                  <CardContent>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          label="Event Name"
+                          name="eventName"
+                          value={formData[day].eventName}
+                          onChange={(e) => handleDayChange(day, e)}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          label="Place"
+                          name="place"
+                          value={formData[day].place}
+                          onChange={(e) => handleDayChange(day, e)}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          type="date"
+                          label="Date"
+                          name="date"
+                          value={formData[day].date}
+                          onChange={(e) => handleDayChange(day, e)}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          label="Time"
+                          type="time"
+                          name="time"
+                          value={formData[day].time}
+                          onChange={(e) => handleDayChange(day, e)}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          label="Description"
+                          name="description"
+                          value={formData[day].description}
+                          onChange={(e) => handleDayChange(day, e)}
+                          multiline
+                          rows={3}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="music"
+                              checked={formData[day].music === 'yes'}
+                              onChange={(e) => handleDayChange(day, {
+                                target: {
+                                  name: 'music',
+                                  value: e.target.checked ? 'yes' : 'no',
+                                },
+                              })}
+                            />
+                          }
+                          label="Music/Dancing"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          label="Dress Code"
+                          name="dressCode"
+                          value={formData[day].dressCode}
+                          onChange={(e) => handleDayChange(day, e)}
+                          variant="outlined"
+                          size="small"
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        ))}
+
+        {/* Submit Button */}
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            style={{ backgroundColor: '#E4D6A7', color: '#000' }} // Updated button color
+          >
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 }
+
+export default WeddingForm;
