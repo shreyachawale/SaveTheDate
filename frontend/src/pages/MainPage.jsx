@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies([]);
+  const [cookies, setCookie,removeCookie] = useCookies([]);
   useEffect(() => {
     const verifyUser = async () => {
       if (!cookies.jwt) {
@@ -21,7 +21,7 @@ export default function HomePage() {
       
     };
     verifyUser();
-  }, [cookies, navigate, removeCookie]);
+  }, [cookies,setCookie,removeCookie]);
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">

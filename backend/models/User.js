@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const bcrypt =require('bcrypt')
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: false,
-        unique: true,
-      },
-      phone: {
-        type: String,
-        required: false,
-        unique: true,
-      },
+    // name: {
+    //     type: String,
+    //     required: false,
+    //     unique: true,
+    //   },
+      // phone: {
+      //   type: String,
+      //   required: false,
+      //   unique: true,
+      // },
     email: {
     type: String,
     required: true,
@@ -31,8 +31,8 @@ userSchema.pre('save',async function(next){
   next();
 })
 
-userSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
+userSchema.statics.login =async function (email, password) {
+  const user = await this.findOne({ email});
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
