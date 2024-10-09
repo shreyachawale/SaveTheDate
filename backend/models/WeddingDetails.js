@@ -1,55 +1,34 @@
-// Define schema for wedding data
-const weddingSchema = new mongoose.Schema({
-  groomName: String,
-  brideName: String,
-  tickets: Number,
-  ticketPrice: Number,
-  preWeddingImages: [String],
-  ourStory: String,
-  languages: String,
-  menu: String,
-  alcohol: String,
-  transportation: String,
-  accommodation: String,
-  day1: {
-    eventName: String,
-    place: String,
-    date: String,
-    description: String,
-    music: String,
-    dressCode: String,
-    time: String,
-  },
-  day2: {
-    eventName: String,
-    place: String,
-    date: String,
-    description: String,
-    music: String,
-    dressCode: String,
-    time: String,
-  },
+const mongoose = require('mongoose');
+
+// Event schema for each day's events
+const eventSchema = new mongoose.Schema({
+  eventName: { type: String, required: true },
+  place: { type: String, required: true },
+  date: { type: Date, required: true },
+  time: { type: String, required: true },
+  description: { type: String, required: true },
+  music: { type: String, default: 'no' },
+  dressCode: { type: String }
 });
 
-const Wedding = mongoose.model('Wedding', weddingSchema);
+// Wedding schema including the user reference
+const weddingSchema = new mongoose.Schema({
+  groomName: { type: String, required: true },
+  brideName: { type: String, required: true },
+  tickets: { type: Number, required: true },
+  ticketPrice: { type: Number, required: true },
+  preWeddingImages: { type: [String], required: false },
+  ourStory: { type: String, required: true },
+  languages: { type: String },
+  menu: { type: String, enum: ['veg', 'non-veg', 'jain'], default: 'veg' },
+  alcohol: { type: String, enum: ['yes', 'no'], default: 'no' },
+  transportation: { type: String, default: 'not included' },
+  accommodation: { type: String, default: 'not included' },
+  day1: { type: eventSchema, required: true },
+  day2: { type: eventSchema, required: true },
 
-  // Create a new wedding entry
-  const newWedding = new Wedding({
-    groomName: formData.groomName,
-    brideName: formData.brideName,
-    tickets: formData.tickets,
-    ticketPrice: formData.ticketPrice,
-    preWeddingImages: preWeddingImages, // Array of image paths
-    ourStory: formData.ourStory,
-    languages: formData.languages,
-    menu: formData.menu,
-    alcohol: formData.alcohol,
-    transportation: formData.transportation,
-    accommodation: formData.accommodation,
-    day1: formData.day1,
-    day2: formData.day2,
-  });
+  // Adding reference to the User model
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+}, { timestamps: true });
 
-  // Save the new wedding entry to the database
-
-
+module.exports = mongoose.model('Wedding', weddingSchema);

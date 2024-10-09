@@ -10,7 +10,9 @@ if(token){
 
         }else{
             try{
-            const user= await user.findById(decodedToken.id);
+                const user = await User.findById(decodedToken.id);
+
+
             if(user)res.json({status:true,user:user.email})
                 else{
                     res.json({status:false});

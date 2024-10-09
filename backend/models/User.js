@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-const bcrypt =require('bcrypt')
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    // name: {
-    //     type: String,
-    //     required: false,
-    //     unique: true,
-    //   },
-      // phone: {
-      //   type: String,
-      //   required: false,
-      //   unique: true,
-      // },
-    email: {
+  name: { 
+    type: String, 
+    required: false, 
+    unique: true, 
+  }, 
+  phone: { 
+    type: String, 
+    required: false, 
+    unique: true, 
+  }, 
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -21,28 +21,30 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
- 
-}
-// { typeKey: '$type' }
-);
-userSchema.pre('save',async function(next){
-  const salt = await bcrypt.genSalt();
-  this.password=await bcrypt.hash(this.password,salt);
-  next();
-})
+  // Add a reference to the Wedding model
+  weddings: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Wedding',  // This refers to the Wedding model
+  }]
+});
 
-userSchema.statics.login =async function (email, password) {
-  const user = await this.findOne({ email});
+userSchema.pre('save', async function(next) {
+  const salt = await bcrypt.genSalt();
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.statics.login = async function(email, password) {
+  const user = await this.findOne({ email });
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
       return user;
-    }else{
-    throw Error("incorrect password");
+    } else {
+      throw Error('incorrect password');
     }
-  }else{
-
-    throw Error("incorrect email");
+  } else {
+    throw Error('incorrect email');
   }
 };
 

@@ -26,27 +26,37 @@ const handlErrors = (err) => {
   }
   return errors;
 };
+
 module.exports.register = async (req, res, next) => {
   try {
-    
-    const{email,password}=req.body
-    const user = await User.create( {email, password });
+    const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({
+        errors: { email: "Email is required", password: "Password is required" },
+        created: false,
+      });
+    }
+
+    const user = await User.create({ email, password });
     const token = createToken(user._id);
-    console.log(token)
+
     res.cookie("jwt", token, {
       withCredentials: true,
       httpOnly: false,
       maxAge: maxAge * 1000,
     });
     res.status(201).json({ user: user._id, created: true });
-   
+
   } catch (err) {
-    
-    console.log("error occured in authcontroller.js " + err);
+    console.log("Error occurred in authcontroller.js: " + err);
     const errors = handlErrors(err);
     res.json({ errors, created: false });
   }
 };
+
+
 module.exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

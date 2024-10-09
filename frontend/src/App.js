@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import Register from './pages/userRegister'
 import Login from './pages/userLogin';
 import "react-toastify/dist/ReactToastify.css" 
+import WeddingForm from './pages/HostForm';
 
 function App() {
   // const [stripePromise, setStripePromise] = useState(null);
@@ -32,7 +33,7 @@ function App() {
         <Header/>
         <Routes>
           <Route path="/" element={<HomePage />} />    {/* Home page */}
-          <Route path="/host" element={<HostForm />} /> {/* HostForm page */}
+          <Route path="/host" element={<WeddingForm />} /> {/* HostForm page */}
 
           <Route path="/host-main/:userName" element={<HostMainPage />} /> {/* HostForm page */}
           <Route path="/wedding-details" element={<EnhancedWeddingDetails />} /> {/* Wedding Details page */}
