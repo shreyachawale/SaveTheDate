@@ -36,7 +36,7 @@ function App() {
           <Route path="/" element={<HomePage />} />    {/* Home page */}
           <Route path="/host" element={<WeddingForm />} /> {/* HostForm page */}
 
-          <Route path="/host-main/:userName" element={<HostMainPage />} /> {/* HostForm page */}
+          <Route path="/host-main" element={<HostMainPage />} /> {/* HostForm page */}
           <Route path="/wedding-details" element={<EnhancedWeddingDetails />} /> {/* Wedding Details page */}
           <Route path="/paymentform" element={<PaymentForm />} /> {/* Payment form page */}
           <Route path="/weddings" element={<ImageCard />} /> {/* Payment form page */}

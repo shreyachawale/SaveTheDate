@@ -92,14 +92,14 @@ export default function Header() {
                   transition={{ duration: 0.2 }}
                 >
                   <Link
-                    to="/guest/login"
+                    to="/guest-auth"
                     className="block px-4 py-2 text-black hover:bg-[#E4D6A7] hover:text-white transition-colors duration-200"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     Login as Guest
                   </Link>
                   <Link
-                    to="/host/login"
+                    to="/host-auth"
                     className="block px-4 py-2 text-black hover:bg-[#E4D6A7] hover:text-white transition-colors duration-200"
                     onClick={() => setIsDropdownOpen(false)}
                   >
@@ -166,7 +166,7 @@ export default function Header() {
                 className="w-full bg-[#E4D6A7] text-black px-6 py-3 rounded-md font-semibold shadow-md hover:bg-black hover:text-[#E4D6A7] transition-colors duration-300 mt-8"
               >
                 <Link to="/host-auth" className="w-full h-full flex justify-center items-center">
-                  Become a Host
+                  Login
                 </Link>
               </motion.button>
             </div>

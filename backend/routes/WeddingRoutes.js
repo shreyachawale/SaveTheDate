@@ -1,23 +1,17 @@
-// backend/routes/WeddingRoutes.js
-
 const express = require('express');
-const router = express.Router();
 const weddingController = require('../controllers/WeddingControllers');
-const authMiddleware = require('../middleware/AuthMiddleware'); // Ensure this middleware exists and is correctly exported
+const router = express.Router();
 
-// Create a new wedding (user must be authenticated)
-router.post('/',  weddingController.createWedding);
+// Create a new wedding
+router.post('/create', weddingController.createWedding);
 
-// Get all weddings for the authenticated user
-router.get('/',  weddingController.getUserWeddings);
+// Get all weddings
+router.get('/all', weddingController.getAllWeddings);
 
-// Get a specific wedding by ID
-router.get('/:id',  weddingController.getWeddingById);
+// Get a wedding by ID
+router.get('/:id', weddingController.getWeddingById);
 
-// Update a specific wedding by ID
-router.put('/:id',  weddingController.updateWedding);
-
-// Delete a specific wedding by ID
-router.delete('/:id', weddingController.deleteWedding);
+// Delete a wedding by ID
+router.delete('/:id', weddingController.deleteWeddingById);
 
 module.exports = router;

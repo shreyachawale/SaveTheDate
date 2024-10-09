@@ -6,6 +6,7 @@ const AuthRoutes=require('./routes/AuthRoutes')
 const cookieparser=require('cookie-parser');
 const weddingRoutes = require('./routes/WeddingRoutes');
 const hostRoutes = require('./routes/HostRoutes')
+
 // import {createServer} from 'http';
 // import{Server} from 'socket.io';
 
