@@ -1,7 +1,14 @@
 import { loadStripe } from '@stripe/stripe-js';
 
+
 async function MakePayment() {
   try {
+
+    // const getWeddingdetails =async()=>{
+    //   const data =await fetch()
+  
+
+    // }
     // Load Stripe with the publishable key
     const stripe = await loadStripe("pk_test_51Q3Aa0C7BPICGXUq8CPyRtBj3SskzQU74LQ6C1eNbX7vfqi4Ht4UncWocrZ47dRH1VL7L2lIwD84JHQPOrKVFXMr00uNsUJpdk");
 
@@ -14,11 +21,13 @@ async function MakePayment() {
     const body = {
       weddings: [
         {
-          name: "Test Wedding",
+          name: "your desired wedding",
           price: 200, // Amount in dollars, to be converted to cents by the backend
-          quantity: 1,
+
+         
         },
-      ],
+      ]
+      
     };
 
     const headers = {
@@ -26,7 +35,7 @@ async function MakePayment() {
     };
 
     // Send a request to create a checkout session
-    const response = await fetch(`http://localhost:5000/api/payments/create-checkout-session`, {
+    const response = await fetch(`http://localhost:8000/create-checkout-session`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
@@ -34,6 +43,7 @@ async function MakePayment() {
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
+      
     }
 
     const session = await response.json();
@@ -51,4 +61,20 @@ async function MakePayment() {
   }
 }
 
-export default MakePayment;
+
+
+
+const PaymentForm = () => {
+  return (
+    <div>
+      <button onClick={MakePayment}>make the payment</button>
+      
+    </div>
+  )
+}
+
+export default PaymentForm
+
+
+
+
