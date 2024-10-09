@@ -1,4 +1,5 @@
 // src/data/weddingsData.js
+// import wedding1 from '../assets/ImageCard/wedding1.jpg'
 const weddingsData = [
     {
       imgSrc: require('../assets/mem1.jpeg').default,
