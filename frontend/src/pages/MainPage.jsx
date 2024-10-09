@@ -5,12 +5,13 @@ import Carousel from '../components/Carousal'
 import PaymentButton from '../components/PaymentButton'
 import TestimonialsPage from '../components/Testimonials'
 import { useCookies } from "react-cookie";
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 // import AuthPage from './HostAuth'
 
 export default function HomePage() {
+   const [ishost,setHost]=useState(false);
   const navigate = useNavigate();
   const [cookies, setCookie,removeCookie] = useCookies([]);
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function HomePage() {
         if(!data.status){
           removeCookie("jwt")
           navigate('/login')
-        }else{ toast(`HEY ${data.user}`)}
+        }else{ toast(`HEY ${data.user.name}`)}
       }
         
       

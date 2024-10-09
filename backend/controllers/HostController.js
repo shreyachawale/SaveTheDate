@@ -30,7 +30,7 @@ module.exports.register = async (req, res) => {
         await host.save();
 
         // Generate JWT
-        const token = jwt.sign({ id: host._id }, JWT_SECRET, { expiresIn: '3 * 24 * 60 * 60h' });
+        const token = jwt.sign({ id: host._id }, JWT_SECRET, { expiresIn: '1h' });
 
         return res.status(201).json({ token });
     } catch (err) {
