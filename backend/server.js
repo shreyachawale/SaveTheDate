@@ -2,7 +2,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const router = require('./routes/router');
-const AuthRoutes=require('./routes/AuthRoutes')
+const guestRoutes=require('./routes/AuthRoutes')
 const cookieparser=require('cookie-parser');
 const weddingRoutes = require('./routes/WeddingRoutes');
 const hostRoutes = require('./routes/HostRoutes')
@@ -32,6 +32,7 @@ app.use(express.json());
 app.use(cookieparser())
 app.use('/api/weddings', weddingRoutes);
 app.use('/api/hosts', hostRoutes);
+app.use('/api/guests', guestRoutes);
 
 
 app.use('/', router);

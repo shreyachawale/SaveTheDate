@@ -1,34 +1,13 @@
+// Guest.js (Model)
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: false, 
-    unique: true, 
-  }, 
-  phone: { 
-    type: String, 
-    required: false, 
-    unique: true, 
-  }, 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "guest",
-    required: false,
-  }
-  // Add a reference to the Wedding model
+const guestSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String },
+  
+  weddings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wedding' }], // Many-to-many relation: guests attending multiple weddings
+}, { timestamps: true });
 
-});
-
-
-module.exports = mongoose.model('User', userSchema);
+const Guest = mongoose.model('Guest', guestSchema);
+module.exports = Guest;

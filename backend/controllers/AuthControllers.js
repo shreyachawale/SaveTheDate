@@ -1,76 +1,84 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const Guest = require('../models/User');
 
-// JWT secret key (ideally stored in environment variables)
-const JWT_SECRET = 'MPRPROJECT';
-
-// Register a new host
-module.exports.register = async (req, res) => {
-    const { name, phone, email, password } = req.body;
+// Create a new guest
+module.exports.createGuest = async (req, res) => {
+    const { name, email, phone, weddings } = req.body;
 
     try {
-        // Check if the host already exists
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create a new host
-        user = new User({
+        const guest = new Guest({
             name,
-            phone,
             email,
-            password: hashedPassword,
+            phone,
+            weddings,
         });
 
-        await user.save();
-
-        // Generate JWT
-        const token = jwt.sign({ id: user._email }, JWT_SECRET, { expiresIn: '1h' });
-
-        return res.status(201).json({ token });
+        await guest.save();
+        res.status(201).json(guest);
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: 'Server error' });
     }
 };
 
-
-module.exports.login = async (req, res) => {
-    const { email, password } = req.body;
-
+// Get all guests
+module.exports.getAllGuests = async (req, res) => {
     try {
-        
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-
-        // Compare passwords
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-
-        // Generate JWT
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-
-        res.json({ token });
+        const guests = await Guest.find().populate('weddings'); // Populate wedding details if needed
+        res.json(guests);
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: 'Server error' });
     }
 };
 
-// Get host details (Protected Route)
-module.exports.getUserDetails = async (req, res) => {
+// Get a guest by ID
+module.exports.getGuestById = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const host = await Host.findById(req.user.id).select('-password');
-        res.json(user);
+        const guest = await Guest.findById(id).populate('weddings'); // Populate wedding details if needed
+        if (!guest) {
+            return res.status(404).json({ msg: 'Guest not found' });
+        }
+        res.json(guest);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+// Update a guest by ID
+module.exports.updateGuestById = async (req, res) => {
+    const { id } = req.params;
+    const { name, email, phone, weddings } = req.body;
+
+    try {
+        const guest = await Guest.findByIdAndUpdate(
+            id,
+            { name, email, phone, weddings },
+            { new: true, runValidators: true } // Return the updated document
+        );
+
+        if (!guest) {
+            return res.status(404).json({ msg: 'Guest not found' });
+        }
+        res.json(guest);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+// Delete a guest by ID
+module.exports.deleteGuestById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const guest = await Guest.findByIdAndDelete(id);
+        if (!guest) {
+            return res.status(404).json({ msg: 'Guest not found' });
+        }
+        res.json({ msg: 'Guest deleted successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: 'Server error' });

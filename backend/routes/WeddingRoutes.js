@@ -1,5 +1,5 @@
 const express = require('express');
-const weddingController = require('../controllers/WeddingControllers');
+const {createWedding, getAllWeddings, getWeddingById, deleteWeddingById} = require('../controllers/WeddingControllers')
 const router = express.Router();
 
 // Create a new wedding

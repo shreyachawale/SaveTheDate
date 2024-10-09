@@ -2,8 +2,8 @@ const Host = require('../models/Host');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// JWT secret key (ideally stored in environment variables)
-const JWT_SECRET = 'MPRPROJECT';
+// Ideally, use environment variables to store sensitive keys like the JWT secret
+const JWT_SECRET = process.env.JWT_SECRET || 'MPRPROJECT';
 
 // Register a new host
 module.exports.register = async (req, res) => {
@@ -32,9 +32,10 @@ module.exports.register = async (req, res) => {
         // Generate JWT
         const token = jwt.sign({ id: host._id }, JWT_SECRET, { expiresIn: '1h' });
 
+        // Send back the token in response
         return res.status(201).json({ token });
     } catch (err) {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({ msg: 'Server error' });
     }
 };
@@ -61,7 +62,7 @@ module.exports.login = async (req, res) => {
 
         res.json({ token });
     } catch (err) {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({ msg: 'Server error' });
     }
 };
@@ -69,10 +70,14 @@ module.exports.login = async (req, res) => {
 // Get host details (Protected Route)
 module.exports.getHostDetails = async (req, res) => {
     try {
-        const host = await Host.findById(req.host.id).select('-password');
+        // Use req.user.id (since JWT payload typically stores user ID as 'id')
+        const host = await Host.findById(req.user.id).select('-password');
+        if (!host) {
+            return res.status(404).json({ msg: 'Host not found' });
+        }
         res.json(host);
     } catch (err) {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({ msg: 'Server error' });
     }
 };
