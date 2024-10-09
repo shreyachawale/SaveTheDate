@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login } = require('../controllers/authcontrollers');
+const { register, login } = require('../controllers/AuthControllers');
 const { checkuser } = require('../middleware/AuthMiddleware');
 require('dotenv').config()
 

@@ -5,6 +5,7 @@ const cors = require('cors');
 const router = require('./routes/router');
 const AuthRoutes=require('./routes/AuthRoutes')
 const cookieparser=require('cookie-parser');
+const weddingRoutes = require('./routes/WeddingRoutes');
 // import {createServer} from 'http';
 // import{Server} from 'socket.io';
 
@@ -28,8 +29,11 @@ app.use(express.json());
 
 // Routes
 app.use(cookieparser())
+app.use('/api/weddings', weddingRoutes);
 
-app.use('/', router); // Added payment route
+
+app.use('/', router);
+ // Added payment route
 // io.on('connection',socket=>{
 //   console.log(`connection on socket server by user: ${socket.id}`);
 //   socket.on('message',message={
