@@ -26,7 +26,7 @@ router.post('/create-checkout-session', async (req, res) => {
         quantity: wedding.quantity,
       })),
       mode: 'payment',
-      success_url: 'http://localhost:3000/', // Update as needed
+      success_url: 'http://localhost:3000/successful', // Update as needed
       cancel_url: 'http://localhost:3000/',   // Update as needed
     });
 

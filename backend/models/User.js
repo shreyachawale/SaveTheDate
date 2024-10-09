@@ -21,31 +21,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // Add a reference to the Wedding model
-  weddings: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Wedding',  // This refers to the Wedding model
-  }]
-});
-
-userSchema.pre('save', async function(next) {
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-userSchema.statics.login = async function(email, password) {
-  const user = await this.findOne({ email });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
-    } else {
-      throw Error('incorrect password');
-    }
-  } else {
-    throw Error('incorrect email');
+  role: {
+    type: String,
+    default: "guest",
+    required: false,
   }
-};
+  // Add a reference to the Wedding model
+
+});
+
 
 module.exports = mongoose.model('User', userSchema);

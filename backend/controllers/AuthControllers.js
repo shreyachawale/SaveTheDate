@@ -1,80 +1,78 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-  return jwt.sign({ id }, "MPRPROJECT", {
-    expiresIn: maxAge,
-  });
-};
-const handlErrors = (err) => {
-  let errors = { email: "", password: "" };
-  console.log(err);
-  if (err.code === 11000) {
-    errors.email = "email is already registered";
-    return errors;
-  }
-  if(err.message==='incorrect email'){
-    errors.email="that is not a registered email:("
-  }
-  if(err.message==='incorrect password'){
-    errors.password="that is not a registered password:("
-  }
-  if (err.message.includes("Users validation failed")) {
-    Object.values(err.errors).forEach(({ properties }) => {
-      errors[properties.path] = properties.message;
-    });
-  }
-  return errors;
-};
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-module.exports.register = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+// JWT secret key (ideally stored in environment variables)
+const JWT_SECRET = 'MPRPROJECT';
 
-    // Check if email and password are provided
-    if (!email || !password) {
-      return res.status(400).json({
-        errors: { email: "Email is required", password: "Password is required" },
-        created: false,
-      });
+// Register a new host
+module.exports.register = async (req, res) => {
+    const { name, phone, email, password } = req.body;
+
+    try {
+        // Check if the host already exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'User already exists' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create a new host
+        user = new User({
+            name,
+            phone,
+            email,
+            password: hashedPassword,
+        });
+
+        await user.save();
+
+        // Generate JWT
+        const token = jwt.sign({ id: user._email }, JWT_SECRET, { expiresIn: '1h' });
+
+        return res.status(201).json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
     }
-
-    const user = await User.create({ email, password });
-    const token = createToken(user._id);
-
-    res.cookie("jwt", token, {
-      withCredentials: true,
-      httpOnly: false,
-      maxAge: maxAge * 1000,
-    });
-    res.status(201).json({ user: user._id, created: true });
-
-  } catch (err) {
-    console.log("Error occurred in authcontroller.js: " + err);
-    const errors = handlErrors(err);
-    res.json({ errors, created: false });
-  }
 };
 
 
-module.exports.login = async (req, res, next) => {
-  try {
+module.exports.login = async (req, res) => {
     const { email, password } = req.body;
 
-    
-    const user = await User.login(email, password );
-    const token = createToken(user._id);
-    res.cookie("jwt", token, {
-      withCredentials: true,
-      httpOnly: false,
-      maxAge: maxAge * 1000,
-    });
-    res.status(200).json({ user: user._id, created: true });
-  } catch (err) {
+    try {
+        
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
 
-    console.log("error occured in authcontroller.js " + err);
-    const errors = handlErrors(err);
-    res.json({ errors, created: false });
-  }
+        // Compare passwords
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
+
+        // Generate JWT
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+
+        res.json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
 };
 
+// Get host details (Protected Route)
+module.exports.getUserDetails = async (req, res) => {
+    try {
+        const host = await Host.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};

@@ -1,113 +1,92 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toast notifications
+import { useState } from "react";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const navigate = useNavigate();
-  
-  const [values, setValues] = useState({
-    name: "",        // Added name field
-    phone: "",       // Added phone field
-    email: "",
-    password: "",
-  });
-
-  const generateError = (err) => {
-    toast.error(err, {
-      position: "top-left",
-    });
-  };
+export default function Register() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post(
-        'http://localhost:8000/register',
-        { ...values },
-        { withCredentials: true }
-      );
-      
-      console.log(data);
 
-      if (data) {
-        if (data.errors) {
-          const { name, phone, email, password } = data.errors; // Updated to include name and phone
-          if (name) generateError(name);
-          if (phone) generateError(phone);
-          if (email) generateError(email);
-          if (password) generateError(password);
-        } else {
-          navigate("/"); // Redirect to homepage or dashboard
-        }
+    try {
+      const response = await axios.post("http://localhost:8000/register", {
+        name,
+        phone,
+        email,
+        password,
+      });
+      if (response.status === 201) {
+        toast.success("Registration successful!");
       }
     } catch (err) {
-      console.log("An error occurred in axios: " + err);
-      generateError("Registration failed. Please try again.");
+      const message = err.response?.data?.message || "Registration failed. Please try again.";
+      toast.error(message);
     }
   };
 
   return (
-    <div className="container">
-      <h2>Register Account</h2>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={values.name}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="phone">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone Number"
-            value={values.phone}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={values.email}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={values.password}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-          />
-        </div>
-        <button type="submit">Submit</button>
-        <span>
-          Already have an account? <Link to="/login">Login</Link>
-        </span>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6">Register as Host</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block mb-2 font-semibold">Name</label>
+            <input
+              type="text"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 font-semibold">Phone</label>
+            <input
+              type="text"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 font-semibold">Email</label>
+            <input
+              type="email"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block mb-2 font-semibold">Password</label>
+            <input
+              type="password"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex">
+            <p>Dont have an account?</p>
+            <Link href='/host/register'> Register</Link>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Register
+          </button>
+        </form>
+      </div>
       <ToastContainer />
     </div>
   );
-};
-
-export default Register;
+}
