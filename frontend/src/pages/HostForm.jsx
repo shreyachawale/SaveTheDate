@@ -136,7 +136,60 @@ function WeddingForm() {
             size="small"
           />
         </Grid>
+      <Grid container spacing={3} style={{ maxWidth: '900px', margin: '0 auto' }}>
+        {/* Groom and Bride Names */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Groom's Name"
+            name="groomName"
+            value={formData.groomName}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Bride's Name"
+            name="brideName"
+            value={formData.brideName}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
 
+        {/* Tickets and Price */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Number of Tickets"
+            type="number"
+            name="tickets"
+            value={formData.tickets}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Amount per Ticket"
+            type="number"
+            name="ticketPrice"
+            value={formData.ticketPrice}
+            onChange={handleChange}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
         {/* Tickets and Price */}
         <Grid item xs={12} sm={6}>
           <TextField
@@ -183,7 +236,40 @@ function WeddingForm() {
             />
           </Button>
         </Grid>
+        {/* Pre-wedding Images */}
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            component="label"
+            fullWidth
+            style={{ backgroundColor: '#E4D6A7', color: '#000' }} // Updated button color
+          >
+            Upload Pre-Wedding Images
+            <input
+              type="file"
+              name="preWeddingImages"
+              multiple
+              hidden
+              onChange={handleChange}
+            />
+          </Button>
+        </Grid>
 
+        {/* Our Story */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Our Story"
+            name="ourStory"
+            value={formData.ourStory}
+            onChange={handleChange}
+            multiline
+            rows={3}
+            required
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
         {/* Our Story */}
         <Grid item xs={12}>
           <TextField
@@ -212,7 +298,33 @@ function WeddingForm() {
             size="small"
           />
         </Grid>
+        {/* Overview Section */}
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            label="Languages Spoken"
+            name="languages"
+            value={formData.languages}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
 
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Menu Offered</InputLabel>
+            <Select
+              name="menu"
+              value={formData.menu}
+              onChange={handleChange}
+            >
+              <MenuItem value="veg">Veg</MenuItem>
+              <MenuItem value="non-veg">Non-Veg</MenuItem>
+              <MenuItem value="jain">Jain</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel>Menu Offered</InputLabel>
@@ -241,6 +353,19 @@ function WeddingForm() {
             </Select>
           </FormControl>
         </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Alcohol Offered</InputLabel>
+            <Select
+              name="alcohol"
+              value={formData.alcohol}
+              onChange={handleChange}
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
         {/* Transportation and Accommodation */}
         <Grid item xs={12} sm={6}>
@@ -256,7 +381,34 @@ function WeddingForm() {
             </Select>
           </FormControl>
         </Grid>
+        {/* Transportation and Accommodation */}
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Transportation</InputLabel>
+            <Select
+              name="transportation"
+              value={formData.transportation}
+              onChange={handleChange}
+            >
+              <MenuItem value="included">Included</MenuItem>
+              <MenuItem value="not included">Not Included</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Accommodation</InputLabel>
+            <Select
+              name="accommodation"
+              value={formData.accommodation}
+              onChange={handleChange}
+            >
+              <MenuItem value="included">Included</MenuItem>
+              <MenuItem value="not included">Not Included</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel>Accommodation</InputLabel>
@@ -392,5 +544,7 @@ function WeddingForm() {
     </form>
   );
 }
+
+export default WeddingForm;
 
 export default WeddingForm;
