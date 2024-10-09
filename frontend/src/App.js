@@ -12,11 +12,12 @@ import UserDashboard from './pages/HostDashboard';
 // import AuthPage from './pages/HostAuth';
 import HostMainPage from './pages/HostMain';
 import { loadStripe } from '@stripe/stripe-js'; // Import the CheckoutWrapper
-import { useEffect, useState } from 'react';
 import Register from './pages/userRegister'
 import Login from './pages/userLogin';
 import "react-toastify/dist/ReactToastify.css" 
 import WeddingForm from './pages/HostForm';
+import HostLogin from './pages/HostLogin';
+import HostRegister from './pages/HostRegister';
 
 function App() {
   // const [stripePromise, setStripePromise] = useState(null);
@@ -42,8 +43,10 @@ function App() {
           <Route path="/memories" element={<Memories />} /> {/* Payment form page */}
           <Route path="/faqs" element={<FAQsPage />} /> {/* Payment form page */}
   
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/guest/register" element={<Register />} />
+          <Route path="/guest/login" element={<Login />} />
+          <Route path="/host/login" element={<HostLogin />} />
+          <Route path="/host/register" element={<HostRegister />} />
           <Route path="/userdashboard" element={<UserDashboard />} /> {/* Payment form page */}
           <Route path="/payment" element={<PaymentForm />} /> {/* Payment form page */}
         </Routes>
