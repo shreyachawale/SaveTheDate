@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const carouselImages = [
   "/placeholder.svg?height=600&width=1200",
@@ -36,6 +37,16 @@ const steps = [
 
 export default function HostMainPage() {
   const [currentImage, setCurrentImage] = useState(0);
+  const navigate = useNavigate();
+  const { hostId } = useParams();
+
+  useEffect(() => {
+    console.log("Host ID from URL:", hostId);
+    if (!hostId) {
+      console.error("Host ID not found");
+      // Consider redirecting or showing an error message if hostId is missing
+    }
+  }, [hostId]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -43,6 +54,14 @@ export default function HostMainPage() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleHostNowClick = () => {
+    if (hostId) {
+      navigate(`/host/${hostId}/hostform`); // Navigate to HostForm with hostId
+    } else {
+      console.error("Host ID not found"); // Log error if hostId is missing
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FEF1E6]">
@@ -79,8 +98,7 @@ export default function HostMainPage() {
             transition={{ delay: 0.4 }}
             className="text-xl md:text-2xl text-center mb-8 max-w-2xl"
           >
-            Share your special day with travelers from around the world and
-            create unforgettable memories
+            Share your special day with travelers from around the world and create unforgettable memories
           </motion.p>
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -88,6 +106,7 @@ export default function HostMainPage() {
             transition={{ delay: 0.6 }}
           >
             <button
+              onClick={handleHostNowClick} // Call handleHostNowClick on button click
               className="bg-[#E4D6A7] text-black py-3 px-6 rounded-lg hover:bg-[#d8c79b] transition-colors duration-300"
             >
               Host Now
@@ -98,30 +117,20 @@ export default function HostMainPage() {
           {carouselImages.map((_, index) => (
             <button
               key={index}
-              className={`w-3 h-3 rounded-full ${
-                index === currentImage
-                  ? "bg-[#E4D6A7]"
-                  : "bg-white bg-opacity-50"
-              }`}
+              className={`w-3 h-3 rounded-full ${index === currentImage ? "bg-[#E4D6A7]" : "bg-white bg-opacity-50"}`}
               onClick={() => setCurrentImage(index)}
             />
           ))}
         </div>
         <button
           className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full"
-          onClick={() =>
-            setCurrentImage(
-              (prev) => (prev - 1 + carouselImages.length) % carouselImages.length
-            )
-          }
+          onClick={() => setCurrentImage((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)}
         >
           <ChevronLeft className="h-8 w-8" />
         </button>
         <button
           className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full"
-          onClick={() =>
-            setCurrentImage((prev) => (prev + 1) % carouselImages.length)
-          }
+          onClick={() => setCurrentImage((prev) => (prev + 1) % carouselImages.length)}
         >
           <ChevronRight className="h-8 w-8" />
         </button>
@@ -146,9 +155,7 @@ export default function HostMainPage() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <p className="text-lg font-semibold text-center text-black">
-                {reason}
-              </p>
+              <p className="text-lg font-semibold text-center text-black">{reason}</p>
             </motion.div>
           ))}
         </div>
@@ -177,9 +184,7 @@ export default function HostMainPage() {
                 {index + 1}
               </div>
               <div className="ml-6">
-                <h3 className="text-xl font-semibold text-black">
-                  {step.title}
-                </h3>
+                <h3 className="text-xl font-semibold text-black">{step.title}</h3>
                 <p className="text-gray-700 mt-2">{step.description}</p>
               </div>
             </motion.div>
@@ -193,21 +198,24 @@ export default function HostMainPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl md:text-4xl font-bold text-black mb-6"
+          className="text-3xl md:text-4xl font-bold text-black mb-4"
         >
-          Ready to make your wedding unforgettable?
+          Ready to Host?
         </motion.h2>
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-lg text-gray-700 mb-8"
         >
-          <button
-            className="bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors duration-300"
-          >
-            Start Hosting Now
-          </button>
-        </motion.div>
+          Start your journey as a host today and create memorable experiences!
+        </motion.p>
+        <button
+          onClick={handleHostNowClick} // Call handleHostNowClick on button click
+          className="bg-black text-white py-3 px-6 rounded-lg hover:bg-opacity-70 transition-colors duration-300"
+        >
+          Get Started
+        </button>
       </section>
     </div>
   );

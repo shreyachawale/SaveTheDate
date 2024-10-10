@@ -1,11 +1,12 @@
+// hostAuth.js (Host-specific Authentication Middleware)
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'MPRPROJECT';
 
 module.exports = function (req, res, next) {
-    // Get token from header
-    const token = req.header('x-auth-token');
+    // Get token from Authorization header
+    const token = req.header('Authorization');
 
-    // Check if token is present
+    // Check if token exists
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
     }
@@ -14,8 +15,8 @@ module.exports = function (req, res, next) {
         // Verify the token
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        // Assign host ID to request object
-        req.host = decoded;
+        // Attach host info to the request object
+        req.host = decoded; // assuming you're signing the token with { id: host._id }
         next();
     } catch (err) {
         res.status(401).json({ msg: 'Token is not valid' });

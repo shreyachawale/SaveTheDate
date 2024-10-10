@@ -7,5 +7,5 @@ const HostSchema = new mongoose.Schema({
     password: { type: String, required: true },
 });
 
-const Host = mongoose.model('Host', HostSchema);
+const Host = mongoose.model('hosts', HostSchema);
 module.exports = Host;

@@ -1,17 +1,21 @@
 const express = require('express');
-const {createWedding, getAllWeddings, getWeddingById, deleteWeddingById} = require('../controllers/WeddingControllers')
 const router = express.Router();
+const weddingController = require('../controllers/WeddingControllers');
+const hostController = require('../controllers/HostController'); // Include your authentication middleware
 
-// Create a new wedding
+// Create a new wedding (protected)
 router.post('/create', weddingController.createWedding);
 
-// Get all weddings
-router.get('/all', weddingController.getAllWeddings);
+// Get all weddings (public)
+router.get('/', weddingController.getWeddings);
 
-// Get a wedding by ID
+// Get wedding by ID
 router.get('/:id', weddingController.getWeddingById);
 
-// Delete a wedding by ID
-router.delete('/:id', weddingController.deleteWeddingById);
+// Update wedding (protected)
+router.put('/:id', hostController.verifyToken, weddingController.updateWedding);
+
+// Delete wedding (protected)
+router.delete('/:id', hostController.verifyToken, weddingController.deleteWedding);
 
 module.exports = router;

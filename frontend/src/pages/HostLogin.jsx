@@ -11,24 +11,33 @@ export default function HostLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post("http://localhost:8000/api/hosts/login", {
         email,
         password,
       });
-
+  
+      console.log(response.data); // Log the response to inspect it
+  
+      // Store the token and host information in localStorage
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("hostName", response.data.hostName); // Ensure you retrieve hostName from the response
-
-      toast.success("Login successful!");
-      // Navigate to user dashboard after success
-      navigate("/userdashboard"); // Use navigate here
+      localStorage.setItem("hostName", response.data.host.name); // Store the host name
+  
+      // Extract host ID from the response
+      const hostId = response.data.host.id; // Access the host ID correctly
+      if (hostId) {
+        navigate(`/host/${hostId}/main`); // Navigate to the host main page with the host ID
+        toast.success("Login successful!");
+      } else {
+        throw new Error("Host ID not found in response.");
+      }
     } catch (err) {
       const message = err.response?.data?.message || "Login failed. Please try again.";
       toast.error(message);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

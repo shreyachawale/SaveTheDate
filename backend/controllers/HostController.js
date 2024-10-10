@@ -1,83 +1,76 @@
-const Host = require('../models/Host');
+const Host = require('../models/Host'); // Import Host model
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Ideally, use environment variables to store sensitive keys like the JWT secret
-const JWT_SECRET = process.env.JWT_SECRET || 'MPRPROJECT';
+// Secret key for JWT (store securely)
+const JWT_SECRET = 'MPRPROJECT'; 
 
-// Register a new host
+// Register Host
 module.exports.register = async (req, res) => {
     const { name, phone, email, password } = req.body;
-
+    
     try {
-        // Check if the host already exists
-        let host = await Host.findOne({ email });
-        if (host) {
-            return res.status(400).json({ msg: 'Host already exists' });
+        // Check if the user already exists
+        const existingHost = await Host.findOne({ email });
+        if (existingHost) {
+            return res.status(400).json({ message: 'Host already exists' });
         }
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new host
-        host = new Host({
-            name,
-            phone,
-            email,
-            password: hashedPassword,
-        });
+        const newHost = new Host({ name, phone, email, password: hashedPassword });
+        await newHost.save();
 
-        await host.save();
+        // Generate JWT token
+        const token = jwt.sign({ id: newHost._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        // Generate JWT
-        const token = jwt.sign({ id: host._id }, JWT_SECRET, { expiresIn: '1h' });
-
-        // Send back the token in response
-        return res.status(201).json({ token });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        return res.status(201).json({ message: 'Host registered successfully', token });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Login a host
+// Login Host
 module.exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if host exists
+        // Find the host by email
         const host = await Host.findOne({ email });
         if (!host) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Compare passwords
+        // Compare password
         const isMatch = await bcrypt.compare(password, host.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT
+        // Generate JWT token
         const token = jwt.sign({ id: host._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        return res.json({ token, host: { id: host._id, name: host.name, email: host.email } });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Get host details (Protected Route)
-module.exports.getHostDetails = async (req, res) => {
+// Verify token middleware
+module.exports.verifyToken = (req, res, next) => {
+    const token = req.header('Authorization')?.split(' ')[1]; // Extract token from 'Bearer TOKEN'
+
+    if (!token) {
+        return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+
     try {
-        // Use req.user.id (since JWT payload typically stores user ID as 'id')
-        const host = await Host.findById(req.user.id).select('-password');
-        if (!host) {
-            return res.status(404).json({ msg: 'Host not found' });
-        }
-        res.json(host);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.host = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: 'Token is not valid' });
     }
 };

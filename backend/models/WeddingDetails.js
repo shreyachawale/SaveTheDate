@@ -1,4 +1,3 @@
-// Wedding.js (Model)
 const mongoose = require('mongoose');
 
 const weddingSchema = new mongoose.Schema({
@@ -8,11 +7,22 @@ const weddingSchema = new mongoose.Schema({
   ticketPrice: { type: Number, required: true },
   preWeddingImages: [{ type: String }], // Array of image URLs or paths
   ourStory: { type: String, required: true },
-  languages: { type: String },
-  menu: { type: String, enum: ['veg', 'non-veg', 'jain'], default: 'veg' },
-  alcohol: { type: String, enum: ['yes', 'no'], default: 'no' },
-  transportation: { type: String, enum: ['included', 'not included'], default: 'not included' },
-  accommodation: { type: String, enum: ['included', 'not included'], default: 'not included' },
+  languages: [{ type: String }], // Changed to array of strings
+  menu: {
+    appetizers: [{ type: String }],
+    mainCourse: [{ type: String }],
+    desserts: [{ type: String }]
+  }, // Changed to an object with arrays
+  alcohol: { type: String, enum: ['yes', 'no'], default: 'no' }, // Ensure to pass "yes" or "no"
+  transportation: {
+    type: { type: String },
+    provider: { type: String }
+  }, // Changed to an object
+  accommodation: {
+    hotelName: { type: String },
+    address: { type: String },
+    phone: { type: String }
+  }, // Changed to an object
   
   day1: {
     eventName: { type: String },
@@ -34,8 +44,8 @@ const weddingSchema = new mongoose.Schema({
     time: { type: String },
   },
   
-  hosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Host' }], // Many-to-many with hosts
-  guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }], // Many-to-many with guests
+  hosts: { type: mongoose.Schema.Types.ObjectId, ref: 'Host' }, // One-to-many with hosts
+  guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Many-to-many with guests
 }, { timestamps: true });
 
 const Wedding = mongoose.model('Wedding', weddingSchema);

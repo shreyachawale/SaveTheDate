@@ -1,20 +1,19 @@
 const express = require('express');
-const guestController = require('../controllers/AuthControllers');
 const router = express.Router();
+const userController = require('../controllers/AuthControllers');
 
-// Create a new guest
-router.post('/', guestController.createGuest);
+// Register a new User
+router.post('/register', userController.register);
 
-// Get all guests
-router.get('/', guestController.getAllGuests);
+// Login User
+router.post('/login', userController.login);
 
-// Get a guest by ID
-router.get('/:id', guestController.getGuestById);
+// Protected route example
+router.get('/protected', userController.verifyToken, (req, res) => {
+    res.json({ message: 'Protected route accessed' });
+});
 
-// Update a guest by ID
-router.put('/:id', guestController.updateGuestById);
-
-// Delete a guest by ID
-router.delete('/:id', guestController.deleteGuestById);
+// Update User's Wedding ID
+router.put('/users/wedding', userController.verifyToken, userController.updateWedding);
 
 module.exports = router;

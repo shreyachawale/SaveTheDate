@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getHostDetails } = require('../controllers/HostController');
-const authMiddleware = require('../middleware/HostMiddleware');
+const authController = require('../controllers/HostController');
 
-// @route   POST api/hosts/register
-// @desc    Register a new host
-// @access  Public
-router.post('/register', register);
+// Register a new Host
+router.post('/register', authController.register);
 
-// @route   POST api/hosts/login
-// @desc    Login a host and get token
-// @access  Public
-router.post('/login', login);
+// Login Host
+router.post('/login', authController.login);
 
-// @route   GET api/hosts/me
-// @desc    Get logged-in host details
-// @access  Private
-router.get('/me', authMiddleware, getHostDetails);
+// Protected route example (you can add more routes)
+router.get('/protected', authController.verifyToken, (req, res) => {
+    res.json({ message: 'Protected route accessed' });
+});
 
 module.exports = router;

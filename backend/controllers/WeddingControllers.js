@@ -1,119 +1,99 @@
 const Wedding = require('../models/WeddingDetails');
-const jwt = require('jsonwebtoken');
+const Host = require('../models/Host');
+const User = require('../models/User');
 
-// Ideally, use environment variables to store sensitive keys like the JWT secret
-const JWT_SECRET = process.env.JWT_SECRET || 'MPRPROJECT';
-
-// Create a new wedding (Protected Route)
+// Create a new wedding
 module.exports.createWedding = async (req, res) => {
-    const { name, date, location } = req.body;
+    const {
+        groomName, brideName, tickets, ticketPrice, preWeddingImages, ourStory,
+        languages, menu, alcohol, transportation, accommodation,
+        day1, day2, hosts, guests
+    } = req.body;
 
     try {
-        // Get the user from the JWT token
-        const userId = req.user.id;
+        // Check if hosts and guests exist
+        const existingHosts = await Host.find({ _id: { $in: hosts } });
+        const existingGuests = await User.find({ _id: { $in: guests } });
 
-        // Create a new wedding with the host as the current user
+        // Create a new wedding
         const newWedding = new Wedding({
-            name,
-            date,
-            location,
-            host: userId, // Assign the current user as the host
+            groomName,
+            brideName,
+            tickets,
+            ticketPrice,
+            preWeddingImages,
+            ourStory,
+            languages,
+            menu,
+            alcohol,
+            transportation,
+            accommodation,
+            day1,
+            day2,
+            hosts: existingHosts.map(host => host._id),
+            guests: existingGuests.map(guest => guest._id),
         });
 
         await newWedding.save();
-        res.status(201).json(newWedding);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+
+        return res.status(201).json({ message: 'Wedding created successfully', wedding: newWedding });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Get all weddings for a host (Protected Route)
-module.exports.getWeddingsForHost = async (req, res) => {
+// Get all weddings
+module.exports.getWeddings = async (req, res) => {
     try {
-        // Get the user from the JWT token
-        const userId = req.user.id;
-
-        // Find weddings where the current user is the host
-        const weddings = await Wedding.find({ host: userId });
-        if (!weddings.length) {
-            return res.status(404).json({ msg: 'No weddings found' });
-        }
-
-        res.json(weddings);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        const weddings = await Wedding.find().populate('hosts guests');
+        return res.status(200).json(weddings);
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Get wedding details by ID (Protected Route)
+// Get wedding by ID
 module.exports.getWeddingById = async (req, res) => {
-    const { weddingId } = req.params;
+    const { id } = req.params;
 
     try {
-        // Get the user from the JWT token
-        const userId = req.user.id;
-
-        // Find the wedding by ID and ensure the current user is the host
-        const wedding = await Wedding.findOne({ _id: weddingId, host: userId });
+        const wedding = await Wedding.findById(id).populate('hosts guests');
         if (!wedding) {
-            return res.status(404).json({ msg: 'Wedding not found' });
+            return res.status(404).json({ message: 'Wedding not found' });
         }
-
-        res.json(wedding);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        return res.status(200).json(wedding);
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Update wedding details (Protected Route)
+// Update wedding details
 module.exports.updateWedding = async (req, res) => {
-    const { weddingId } = req.params;
-    const { name, date, location } = req.body;
+    const { id } = req.params;
+    const updateData = req.body;
 
     try {
-        // Get the user from the JWT token
-        const userId = req.user.id;
-
-        // Find the wedding and ensure the current user is the host
-        let wedding = await Wedding.findOne({ _id: weddingId, host: userId });
+        const wedding = await Wedding.findByIdAndUpdate(id, updateData, { new: true }).populate('hosts guests');
         if (!wedding) {
-            return res.status(404).json({ msg: 'Wedding not found' });
+            return res.status(404).json({ message: 'Wedding not found' });
         }
-
-        // Update wedding details
-        wedding.name = name || wedding.name;
-        wedding.date = date || wedding.date;
-        wedding.location = location || wedding.location;
-
-        await wedding.save();
-        res.json(wedding);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        return res.status(200).json({ message: 'Wedding updated successfully', wedding });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
 
-// Delete a wedding (Protected Route)
+// Delete wedding
 module.exports.deleteWedding = async (req, res) => {
-    const { weddingId } = req.params;
+    const { id } = req.params;
 
     try {
-        // Get the user from the JWT token
-        const userId = req.user.id;
-
-        // Find the wedding and ensure the current user is the host
-        const wedding = await Wedding.findOne({ _id: weddingId, host: userId });
+        const wedding = await Wedding.findByIdAndDelete(id);
         if (!wedding) {
-            return res.status(404).json({ msg: 'Wedding not found' });
+            return res.status(404).json({ message: 'Wedding not found' });
         }
-
-        await wedding.remove();
-        res.json({ msg: 'Wedding removed' });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error' });
+        return res.status(200).json({ message: 'Wedding deleted successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
     }
 };
