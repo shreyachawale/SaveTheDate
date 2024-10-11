@@ -2,13 +2,14 @@
 // const { register, login } = require('../controllers/AuthControllers');
 // const { checkuser } = require('../middleware/AuthMiddleware');
 // require('dotenv').config();
+// const router=express.Router()
 
 // const payment = process.env.STRIPE_SECRET_KEY;
 // const stripe = require('stripe')(payment); // Replace with your actual secret key
 
 // const router = express.Router();
 
-// // Create a checkout session
+// Create a checkout session
 // router.post('/create-checkout-session', async (req, res) => {
 //   try {
 //     const { weddings } = req.body;

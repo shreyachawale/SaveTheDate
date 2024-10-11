@@ -5,7 +5,6 @@ const cookieparser = require('cookie-parser');
 const weddingRoutes = require('./routes/WeddingRoutes');
 const hostRoutes = require('./routes/HostRoutes');
 const guestRoutes = require('./routes/AuthRoutes');
-// const router = require('./routes/router');
 const jwtAuth = require('./middleware/AuthMiddleware'); 
 
 const app = express();
@@ -26,7 +25,6 @@ app.use(cookieparser());
 app.use('/api/weddings', weddingRoutes);
 app.use('/api/hosts', hostRoutes);
 app.use('/api/guests', guestRoutes);
-// app.use('/', router);  // General router
 
 // Start Server
 const PORT = process.env.PORT || 5000;

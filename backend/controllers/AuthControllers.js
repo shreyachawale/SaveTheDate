@@ -30,10 +30,13 @@ module.exports.register = async (req, res) => {
 };
 
 // Login User
-module.exports.login = async (req, res) => {
-    const { email, password } = req.body;
+module.exports.login = async (req, res) =>{
+
 
     try {
+    const { email, password } = req.body;
+
+  
         // Find the user by email
         const user = await User.findOne({ email });
         if (!user) {
@@ -50,8 +53,10 @@ module.exports.login = async (req, res) => {
         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
         return res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
-    } catch (error) {
-        return res.status(500).json({ message: 'Server error', error });
+    } 
+
+    catch(err){
+        console.log("catch these nuts:")
     }
 };
 

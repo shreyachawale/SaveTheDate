@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import weddet1 from '../assets/weddet1.jpg';
 import weddet2 from '../assets/weddet2.jpg';
+// import {MakePayment} from "../pages/PaymentForm";
 
 export default function EnhancedWeddingDetails() {
   const [ticketsLeft, setTicketsLeft] = useState(50);
@@ -161,7 +162,7 @@ export default function EnhancedWeddingDetails() {
         <section className="mb-20 flex justify-center items-center space-x-8">
           <button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-primary hover:bg-primary/90 text-black text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Get Your Ticket
           </button>
@@ -174,7 +175,7 @@ export default function EnhancedWeddingDetails() {
               <p className="mb-4">Tickets Left: {ticketsLeft}</p>
               <div className="flex justify-between">
                 <button onClick={() => setIsDialogOpen(false)} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
-                <button onClick={handlePurchaseTicket} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Purchase Ticket</button>
+                <button  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Purchase Ticket</button>
               </div>
             </div>
           </div>

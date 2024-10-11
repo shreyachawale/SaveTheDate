@@ -60,7 +60,7 @@ export default function Header() {
             <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#E4D6A7] text-black font-bold">
               {getInitials(hostName)}
             </div>
-            <Link to="/host-main">
+            <Link to="/userdashboard">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

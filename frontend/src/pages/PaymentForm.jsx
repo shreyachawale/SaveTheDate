@@ -23,6 +23,7 @@ async function MakePayment() {
         {
           name: "your desired wedding",
           price: 200, // Amount in dollars, to be converted to cents by the backend
+          quantity:1
 
          
         },

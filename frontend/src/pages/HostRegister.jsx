@@ -9,7 +9,7 @@ export default function HostRegister() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  useNavigate();
+  const navigate = useNavigate(); // Store the result of useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +23,7 @@ export default function HostRegister() {
       });
       if (response.status === 201) {
         toast.success("Registration successful!");
+        navigate("/host/login"); // Navigate to login page after successful registration
       }
     } catch (err) {
       const message = err.response?.data?.message || "Registration failed. Please try again.";
@@ -52,6 +53,7 @@ export default function HostRegister() {
               className="w-full p-2 border border-gray-300 rounded-md"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -74,10 +76,7 @@ export default function HostRegister() {
               required
             />
           </div>
-          <div className="flex">
-            <p>Dont have an account?</p>
-            <Link href='/host/register'> Register</Link>
-          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
@@ -85,6 +84,13 @@ export default function HostRegister() {
             Register
           </button>
         </form>
+
+        <div className="flex justify-between mt-4">
+          <p>Already have an account?</p>
+          <Link to="/host/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
+        </div>
       </div>
       <ToastContainer />
     </div>

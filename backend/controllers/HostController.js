@@ -60,9 +60,13 @@ module.exports.login = async (req, res) => {
 
 // Verify token middleware
 module.exports.verifyToken = (req, res, next) => {
+    try{
+    
+    
     const token = req.header('Authorization')?.split(' ')[1]; // Extract token from 'Bearer TOKEN'
 
     if (!token) {
+        
         return res.status(401).json({ message: 'No token, authorization denied' });
     }
 
@@ -73,4 +77,8 @@ module.exports.verifyToken = (req, res, next) => {
     } catch (error) {
         return res.status(401).json({ message: 'Token is not valid' });
     }
+}catch(error){
+    console.log("hello fron rutime error")
+
+}
 };

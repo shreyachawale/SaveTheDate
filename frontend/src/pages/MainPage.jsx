@@ -16,6 +16,9 @@ export default function HomePage() {
   const [cookies, setCookie,removeCookie] = useCookies([]);
   useEffect(() => {
     const verifyUser = async () => {
+      try{
+      
+      
       
         const{data}=await axios.post('http://localhost:8000/',{},{withCredentials:true})
         if(!data.status){
@@ -23,6 +26,10 @@ export default function HomePage() {
           navigate('/login')
         }else{ toast(`HEY ${data.user.name}`)}
       }
+    catch(err){
+      console.log(err)
+    }
+  }
         
       
   

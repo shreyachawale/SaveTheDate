@@ -46,11 +46,14 @@ module.exports.createWedding = async (req, res) => {
 module.exports.getWeddings = async (req, res) => {
     try {
         const weddings = await Wedding.find().populate('hosts guests');
+        console.log('Fetched weddings:', weddings); // Log the fetched weddings
         return res.status(200).json(weddings);
     } catch (error) {
+        console.error('Error fetching weddings:', error); // Log the error
         return res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 // Get wedding by ID
 module.exports.getWeddingById = async (req, res) => {
