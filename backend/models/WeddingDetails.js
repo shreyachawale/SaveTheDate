@@ -38,9 +38,10 @@ const weddingSchema = new mongoose.Schema({
   },
   
   hosts: { type: mongoose.Schema.Types.ObjectId, ref: 'Host' }, // One-to-many with hosts
-  guests: [{ 
-    type: mongoose.Schema.Types.ObjectId, ref: 'User'
-   }], // Many-to-many with guests
+  guests: [{
+    guestId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    paymentStatus: { type: String, default: 'Pending' } // Add this field to track payment status
+  }],
   requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 

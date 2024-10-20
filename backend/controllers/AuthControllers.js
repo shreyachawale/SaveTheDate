@@ -120,9 +120,10 @@ module.exports.getApprovedWeddings = async (req, res) => {
     const guestId = req.params.guestId;  // Guest ID from the request
   
     try {
-      // Find weddings where the guest is already part of the 'guests' array
-      const weddings = await Wedding.find({ guests: guestId }).populate('hosts guests');
-  
+      // Find weddings where the guest is part of the 'guests' array
+      const weddings = await Wedding.find({ 'guests._id': guestId }).populate('hosts guests');
+      console.log(weddings)
+      
       if (weddings.length === 0) {
         return res.status(404).json({ message: 'No approved weddings found for this guest' });
       }
@@ -133,3 +134,4 @@ module.exports.getApprovedWeddings = async (req, res) => {
       res.status(500).json({ error: 'Server error while fetching weddings' });
     }
   };
+  

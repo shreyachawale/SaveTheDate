@@ -12,7 +12,6 @@ const HostDashboard = () => {
       try {
         const response = await fetch(`http://localhost:8000/api/hosts/${hostId}/weddings`);
         const data = await response.json();
-        console.log(data)
         setWeddings(data.weddings || []); // Safely setting weddings, default to an empty array if undefined
         setLoading(false);
       } catch (error) {
@@ -34,6 +33,7 @@ const HostDashboard = () => {
         },
         body: JSON.stringify({ userId }),
       });
+      console.log(response)
 
       if (response.ok) {
         alert('User approved!');
@@ -44,7 +44,10 @@ const HostDashboard = () => {
               ? {
                   ...wedding,
                   requests: wedding.requests?.filter(request => request._id !== userId) || [], // Ensure requests is an array
-                  guests: [...(wedding.guests || []), userId], // Add user to guests array
+                  guests: [
+                    ...wedding.guests, // Retaining existing guests
+                    { guestId: userId, paymentStatus: 'Pending' } // Add guest with payment status
+                  ],
                 }
               : wedding
           )
@@ -72,7 +75,20 @@ const HostDashboard = () => {
           <div key={wedding._id} className="wedding-card">
             <h2>{wedding.groomName} & {wedding.brideName}'s Wedding</h2>
             
-            {wedding.requests?.length === 0 ? ( // Safely checking if requests exists and has a length
+            {/* Display list of guests with payment status */}
+            {wedding.guests?.length > 0 && (
+              <div>
+                <h3>Approved Guests:</h3>
+                {wedding.guests.map((guest) => (
+                  <div key={guest.guestId} className="guest-card">
+                    <p>Guest ID: {guest.guestId}</p>
+                    <p>Payment Status: {guest.paymentStatus}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {wedding.requests?.length === 0 ? (
               <p>No requests for this wedding</p>
             ) : (
               <div>

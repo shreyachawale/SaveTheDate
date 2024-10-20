@@ -8,7 +8,8 @@ const stripePromise = loadStripe('pk_test_51Q3Aa0C7BPICGXUq8CPyRtBj3SskzQU74LQ6C
 const GuestDashboard = () => {
   const [approvedWeddings, setApprovedWeddings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { userId } = useParams();
+  const { userId } = useParams();  // guestId
+  console.log(userId);
 
   useEffect(() => {
     const fetchApprovedWeddings = async () => {
@@ -16,16 +17,16 @@ const GuestDashboard = () => {
       try {
         const response = await fetch(`http://localhost:8000/api/guests/${userId}/approved-weddings`);
         const data = await response.json();
+        console.log(data);
 
         if (data && Array.isArray(data.weddings)) {
           setApprovedWeddings(data.weddings);
         } else {
           setApprovedWeddings([]);
         }
-
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching approved weddings:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -43,8 +44,12 @@ const GuestDashboard = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ weddingId, userId }), // Send wedding and user info
+        body: JSON.stringify({ weddingId, userId }),  // Send wedding and user info
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment session');
+      }
 
       const session = await response.json();
 
@@ -76,8 +81,13 @@ const GuestDashboard = () => {
               <p>Date: {new Date(wedding?.day2?.date).toLocaleDateString()}</p>
               <p>Venue: {wedding?.day2?.place}</p>
 
+              {/* Show payment status */}
+              <p>Payment Status: {wedding.guests.find(guest => guest._id === userId)?.paymentStatus || 'Pending'}</p>
+
               {/* Button to pay for the wedding */}
-              <button onClick={() => handlePayForWedding(wedding._id)}>Pay for Wedding</button>
+              {wedding.guests.find(guest => guest._id === userId)?.paymentStatus === 'Pending' && (
+                <button onClick={() => handlePayForWedding(wedding._id)}>Pay for Wedding</button>
+              )}
             </li>
           ))}
         </ul>
