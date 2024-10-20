@@ -18,6 +18,7 @@ import SuccessPayment from './pages/paymentsuccess';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 import GuestDashboard from './pages/GuestDashboard';
+import PaymentSuccess from './pages/Success';
 
 // Layout component to wrap all pages and include Header everywhere
 const Layout = ({ children }) => (
@@ -56,6 +57,7 @@ function App() {
         <Route path="/:userId/userdashboard" element={<Layout><GuestDashboard /></Layout>} />
         <Route path="/userdashboard" element={<Layout><UserDashboard /></Layout>} />
         <Route path="/payment" element={<Layout><PaymentForm /></Layout>} />
+        <Route path="/payment-success" element={<Layout><PaymentSuccess /></Layout>} />
       </Routes>
     </Router>
   );
