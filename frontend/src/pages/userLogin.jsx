@@ -49,52 +49,123 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Login to Your Account</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Email Input Field */}
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={values.email}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-            required
-          />
-        </div>
+    <div style={styles.container}>
+      <div style={styles.loginContainer}>
+        {/* Update the title to "Login as Guest" */}
+        <h2 style={styles.title}>Login as Guest</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Email Input Field */}
+          <div style={styles.inputContainer}>
+            <label htmlFor="email" style={styles.label}>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={values.email}
+              onChange={(e) =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+              style={styles.input}
+              required
+            />
+          </div>
 
-        {/* Password Input Field */}
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={values.password}
-            onChange={(e) =>
-              setValues({ ...values, [e.target.name]: e.target.value })
-            }
-            required
-          />
-        </div>
+          {/* Password Input Field */}
+          <div style={styles.inputContainer}>
+            <label htmlFor="password" style={styles.label}>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={values.password}
+              onChange={(e) =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+              style={styles.input}
+              required
+            />
+          </div>
 
-        {/* Submit Button */}
-        <button type="submit">Submit</button>
+          {/* Submit Button */}
+          <button type="submit" style={styles.button}>Login</button>
 
-        {/* Navigation to Register */}
-        <span>
-          Don't have an account? <Link to="/register">Register</Link>
-        </span>
-      </form>
+          {/* Navigation to Register */}
+          <span style={styles.registerLink}>
+            Don't have an account? <Link to="/register" style={styles.link}>Register</Link>
+          </span>
+        </form>
 
-      {/* Toast Notifications */}
-      <ToastContainer />
+        {/* Toast Notifications */}
+        <ToastContainer />
+      </div>
     </div>
   );
 };
+
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    backgroundColor: "#f9f9f9",
+  },
+  loginContainer: {
+    backgroundColor: "#fff",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    width: "100%",
+    maxWidth: "400px",
+    textAlign: "center",
+  },
+  title: {
+    fontSize: "24px",
+    marginBottom: "20px",
+    color: "#333",
+  },
+  inputContainer: {
+    marginBottom: "15px",
+    textAlign: "left",
+  },
+  label: {
+    display: "block",
+    marginBottom: "8px",
+    fontSize: "14px",
+    color: "#333",
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    fontSize: "14px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    boxSizing: "border-box",
+  },
+  button: {
+    width: "100%",
+    padding: "10px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    fontSize: "16px",
+    cursor: "pointer",
+  },
+  buttonHover: {
+    backgroundColor: "#0056b3",
+  },
+  registerLink: {
+    display: "block",
+    marginTop: "15px",
+    fontSize: "14px",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+  },
+};
+
+
 
 export default Login;
