@@ -6,6 +6,7 @@ const weddingRoutes = require('./routes/WeddingRoutes');
 const hostRoutes = require('./routes/HostRoutes');
 const guestRoutes = require('./routes/AuthRoutes');
 const jwtAuth = require('./middleware/AuthMiddleware'); 
+const stripeRoutes = require('./routes/StripeRoutes')
 
 const app = express();
 app.use(cors({
@@ -25,6 +26,7 @@ app.use(cookieparser());
 app.use('/api/weddings', weddingRoutes);
 app.use('/api/hosts', hostRoutes);
 app.use('/api/guests', guestRoutes);
+app.use('/api/payments', stripeRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

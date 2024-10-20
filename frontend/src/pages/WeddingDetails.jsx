@@ -213,7 +213,7 @@ export default function EnhancedWeddingDetails() {
           <div className="fixed inset-0 flex items-center justify-center bg-black/50">
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-md">
               <h2 className="text-2xl font-bold mb-4">Purchase Ticket</h2>
-              <p className="mb-4">Tickets Left: {ticketsLeft}</p>
+              <p className="mb-4">Tickets Left: {weddingData.tickets}</p>
               <div className="flex justify-between">
                 <button onClick={() => setIsDialogOpen(false)} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
                 <button onClick={() => handleRequestAccess(id, userId)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Request for the Ticket</button>

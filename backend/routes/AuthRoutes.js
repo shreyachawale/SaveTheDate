@@ -18,5 +18,6 @@ router.put('/users/wedding', userController.verifyToken, userController.updateWe
 
 // Fetch User Details by ID (NEW GET API)
 router.get('/:id', userController.getUserById);
+router.get('/:guestId/approved-weddings', userController.getApprovedWeddings);
 
 module.exports = router;

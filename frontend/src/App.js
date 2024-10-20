@@ -17,6 +17,7 @@ import HostRegister from './pages/HostRegister';
 import SuccessPayment from './pages/paymentsuccess';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
+import GuestDashboard from './pages/GuestDashboard';
 
 // Layout component to wrap all pages and include Header everywhere
 const Layout = ({ children }) => (
@@ -52,6 +53,7 @@ function App() {
         <Route path="/host/:id/hostform" element={<Layout><WeddingForm /></Layout>} />
         <Route path="/host/:hostId/main" element={<Layout><HostMainPage /></Layout>} />
         <Route path="/host/:hostId/userdashboard" element={<Layout><UserDashboard /></Layout>} />
+        <Route path="/:userId/userdashboard" element={<Layout><GuestDashboard /></Layout>} />
         <Route path="/userdashboard" element={<Layout><UserDashboard /></Layout>} />
         <Route path="/payment" element={<Layout><PaymentForm /></Layout>} />
       </Routes>

@@ -1,6 +1,7 @@
 const User = require('../models/User'); // Import User model
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Wedding = require('../models/WeddingDetails')
 
 // Secret key for JWT (store securely)
 const JWT_SECRET = 'MPRPROJECT';
@@ -113,3 +114,22 @@ module.exports.updateWedding = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error });
     }
 };
+
+
+module.exports.getApprovedWeddings = async (req, res) => {
+    const guestId = req.params.guestId;  // Guest ID from the request
+  
+    try {
+      // Find weddings where the guest is already part of the 'guests' array
+      const weddings = await Wedding.find({ guests: guestId }).populate('hosts guests');
+  
+      if (weddings.length === 0) {
+        return res.status(404).json({ message: 'No approved weddings found for this guest' });
+      }
+  
+      res.status(200).json({ weddings });
+    } catch (error) {
+      console.error('Error fetching approved weddings:', error);
+      res.status(500).json({ error: 'Server error while fetching weddings' });
+    }
+  };

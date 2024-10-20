@@ -16,6 +16,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Softer box shadow */
     overflow: hidden; /* Prevent overflow */
     transition: transform 0.3s ease-in-out; /* Smooth transition for hover effects */
+    margin-top: 10px;
   }
   
   .image-card img {
