@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const carouselImages = [
-  "/placeholder.svg?height=600&width=1200",
-  "/placeholder.svg?height=600&width=1200",
-  "/placeholder.svg?height=600&width=1200",
+  "https://img.ozphotovideos.com/wp-content/uploads/2019/09/sydney-indian-wedding-photography-4.jpg",
+  "https://i.pinimg.com/originals/00/5e/e3/005ee329e9b5875841fc8699441db1a2.jpg",
+  "https://www.playadelcarmen.com/blog/wp-content/uploads/indian-wedding-packages-title-image-.png",
 ];
 
 const reasons = [

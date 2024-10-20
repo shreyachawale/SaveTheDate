@@ -46,13 +46,13 @@ function App() {
         <Route path="/:userId/memories" element={<Layout><Memories /></Layout>} />
         <Route path="/faqs" element={<Layout><FAQsPage /></Layout>} />
         <Route path="/:userId/faqs" element={<Layout><FAQsPage /></Layout>} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/guest/register" element={<Register />} />
-        <Route path="/guest/login" element={<Login />} />
+        <Route path="/register" element={<Layout><Register /></Layout>} />
+        <Route path="/login" element={<Layout><Login /></Layout>} />
+        <Route path="/guest/register" element={<Layout><Register /></Layout> } />
+        <Route path="/guest/login" element={<Layout><Login /></Layout> } />
         <Route path="/success" element={<Layout><SuccessPage /></Layout>} />
-        <Route path="/host/login" element={<HostLogin />} />
-        <Route path="/host/register" element={<HostRegister />} />
+        <Route path="/host/login" element={<Layout><HostLogin /></Layout>} />
+        <Route path="/host/register" element={<Layout><HostRegister /></Layout> } />
         <Route path="/host/:id/hostform" element={<Layout><WeddingForm /></Layout>} />
         <Route path="/host/:hostId/main" element={<Layout><HostMainPage /></Layout>} />
         <Route path="/host/:hostId/userdashboard" element={<Layout><UserDashboard /></Layout>} />

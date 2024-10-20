@@ -62,8 +62,8 @@ export default function HomePage() {
           &copy; 2023 WeddingAbroad. All rights reserved.
         </div>
       </footer>
-      <PaymentButton />
-      <PaymentForm/>
+      {/* <PaymentButton />
+      <PaymentForm/> */}
     </div>
   );
 }
