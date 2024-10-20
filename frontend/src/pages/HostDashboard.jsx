@@ -33,20 +33,18 @@ const HostDashboard = () => {
         },
         body: JSON.stringify({ userId }),
       });
-      console.log(response)
 
       if (response.ok) {
         alert('User approved!');
-        // Optionally, update the state to remove the approved user from requests
-        setWeddings(prevWeddings =>
-          prevWeddings.map(wedding =>
+        setWeddings((prevWeddings) =>
+          prevWeddings.map((wedding) =>
             wedding._id === weddingId
               ? {
                   ...wedding,
-                  requests: wedding.requests?.filter(request => request._id !== userId) || [], // Ensure requests is an array
+                  requests: wedding.requests?.filter((request) => request._id !== userId) || [], // Ensure requests is an array
                   guests: [
                     ...wedding.guests, // Retaining existing guests
-                    { guestId: userId, paymentStatus: 'Pending' } // Add guest with payment status
+                    { guestId: userId, paymentStatus: 'Pending' }, // Add guest with payment status
                   ],
                 }
               : wedding
@@ -65,38 +63,65 @@ const HostDashboard = () => {
   }
 
   return (
-    <div>
-      <h1>Host Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F9F4E5] to-[#E4D6A7] p-8">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
+        Host Dashboard
+      </h1>
 
       {weddings.length === 0 ? (
-        <p>No weddings found</p>
+        <p className="text-lg text-center text-gray-600">No weddings found</p>
       ) : (
         weddings.map((wedding) => (
-          <div key={wedding._id} className="wedding-card">
-            <h2>{wedding.groomName} & {wedding.brideName}'s Wedding</h2>
-            
+          <div
+            key={wedding._id}
+            className="bg-white shadow-lg rounded-lg p-6 mb-8 max-w-4xl mx-auto"
+          >
+            <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">
+              {wedding.groomName} & {wedding.brideName}'s Wedding
+            </h2>
+
             {/* Display list of guests with payment status */}
             {wedding.guests?.length > 0 && (
-              <div>
-                <h3>Approved Guests:</h3>
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-gray-700 mb-3">Approved Guests:</h3>
                 {wedding.guests.map((guest) => (
-                  <div key={guest.guestId} className="guest-card">
-                    <p>Guest ID: {guest.guestId}</p>
-                    <p>Payment Status: {guest.paymentStatus}</p>
+                  <div
+                    key={guest.guestId}
+                    className="flex items-center justify-between bg-gray-100 p-3 rounded-md mb-3 shadow-sm"
+                  >
+                    <div>
+                      <p className="text-gray-800">
+                        <span className="font-bold">Guest ID:</span> {guest.guestId}
+                      </p>
+                      <p className="text-gray-600">
+                        <span className="font-bold">Payment Status:</span>{' '}
+                        {guest.paymentStatus}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
             )}
 
             {wedding.requests?.length === 0 ? (
-              <p>No requests for this wedding</p>
+              <p className="text-center text-gray-600">No requests for this wedding</p>
             ) : (
               <div>
-                <h3>Pending Requests:</h3>
+                <h3 className="text-xl font-semibold text-gray-700 mb-3">Pending Requests:</h3>
                 {wedding.requests.map((request) => (
-                  <div key={request._id} className="request-card">
-                    <p>{request.name} wants to join your wedding</p>
-                    <button onClick={() => handleApproveRequest(wedding._id, request._id)}>Approve</button>
+                  <div
+                    key={request._id}
+                    className="flex items-center justify-between bg-gray-100 p-4 rounded-md shadow-sm mb-3"
+                  >
+                    <p className="text-gray-800">
+                      <span className="font-medium">{request.name}</span> wants to join your wedding
+                    </p>
+                    <button
+                      onClick={() => handleApproveRequest(wedding._id, request._id)}
+                      className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition duration-300"
+                    >
+                      Approve
+                    </button>
                   </div>
                 ))}
               </div>

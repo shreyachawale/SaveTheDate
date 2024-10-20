@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import GuestDashboard from './pages/GuestDashboard';
 import PaymentSuccess from './pages/Success';
 import ContactUs from './pages/Contact';
+import SuccessPage from './pages/SuccessPage';
 
 // Layout component to wrap all pages and include Header everywhere
 const Layout = ({ children }) => (
@@ -49,7 +50,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/guest/register" element={<Register />} />
         <Route path="/guest/login" element={<Login />} />
-        <Route path="/success" element={<Layout><SuccessPayment /></Layout>} />
+        <Route path="/success" element={<Layout><SuccessPage /></Layout>} />
         <Route path="/host/login" element={<HostLogin />} />
         <Route path="/host/register" element={<HostRegister />} />
         <Route path="/host/:id/hostform" element={<Layout><WeddingForm /></Layout>} />
