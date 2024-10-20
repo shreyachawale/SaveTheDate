@@ -29,6 +29,22 @@ module.exports.register = async (req, res) => {
     }
 };
 
+
+// Fetch User Details by ID
+module.exports.getUserById = async (req, res) => {
+    const { id } = req.params; // Get user ID from the URL params
+
+    try {
+        const user = await User.findById(id); // Fetch user by ID
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(200).json(user); // Send user details as response
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 // Login User
 module.exports.login = async (req, res) =>{
 

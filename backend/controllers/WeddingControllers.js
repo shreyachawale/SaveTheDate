@@ -100,3 +100,51 @@ module.exports.deleteWedding = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error });
     }
 };
+
+// Controller to handle user request to join a wedding
+module.exports.requestAccessToWedding = async (req, res) => {
+    try {
+      const { weddingId } = req.params;
+      const { userId } = req.body;
+  
+      const wedding = await Wedding.findById(weddingId);
+  
+      if (!wedding) {
+        return res.status(404).json({ message: 'Wedding not found' });
+      }
+  
+      // Check if the user has already sent a request
+      if (!wedding.requests.includes(userId)) {
+        wedding.requests.push(userId);
+        await wedding.save();
+        res.status(200).json({ message: 'Request sent successfully' });
+      } else {
+        res.status(400).json({ message: 'Request already sent' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error sending request', error });
+    }
+  };
+  
+  // Controller to handle host approval of a user request
+  module.exports.approveRequest = async (req, res) => {
+    try {
+      const { weddingId } = req.params;
+      const { userId } = req.body;
+  
+      const wedding = await Wedding.findById(weddingId);
+  
+      if (!wedding) {
+        return res.status(404).json({ message: 'Wedding not found' });
+      }
+  
+      // Remove the user from requests and add to guests
+      wedding.requests = wedding.requests.filter(reqId => reqId.toString() !== userId);
+      wedding.guests.push(userId);
+      
+      await wedding.save();
+      res.status(200).json({ message: 'User approved successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error approving user', error });
+    }
+  };

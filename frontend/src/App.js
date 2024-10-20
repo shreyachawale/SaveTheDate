@@ -11,36 +11,50 @@ import UserDashboard from './pages/HostDashboard';
 import HostMainPage from './pages/HostMain';
 import Register from './pages/userRegister';
 import Login from './pages/userLogin';
-import "react-toastify/dist/ReactToastify.css"; 
 import WeddingForm from './pages/HostForm';
 import HostLogin from './pages/HostLogin';
 import HostRegister from './pages/HostRegister';
 import SuccessPayment from './pages/paymentsuccess';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; 
+
+// Layout component to wrap all pages and include Header everywhere
+const Layout = ({ children }) => (
+  <>
+    <Header />
+    <main>{children}</main> {/* Render the page content here */}
+  </>
+);
 
 function App() {
   return (
     <Router>
-      <div>
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} /> {/* Home page */}
-          <Route path="/host/:id/hostform" element={<WeddingForm />} /> {/* HostForm page */}
-          <Route path="/host/:hostId/main" element={<HostMainPage />} /> {/* HostMainPage */}
-          <Route path="/wedding-details" element={<EnhancedWeddingDetails />} /> {/* Wedding Details page */}
-          <Route path="/weddings" element={<ImageCard />} /> {/* Wedding images */}
-          <Route path="/memories" element={<Memories />} /> {/* Memories page */}
-          <Route path="/faqs" element={<FAQsPage />} /> {/* FAQs page */}
-          <Route path="/register" element={<Register />} /> {/* User Registration */}
-          <Route path="/login" element={<Login />} /> {/* User Login */}
-          <Route path="/guest/register" element={<Register />} />
-          <Route path="/guest/login" element={<Login />} />
-          <Route path="/success" element={<SuccessPayment />} /> {/* Success Payment */}
-          <Route path="/host/login" element={<HostLogin />} /> {/* Host Login */}
-          <Route path="/host/register" element={<HostRegister />} /> {/* Host Registration */}
-          <Route path="/userdashboard" element={<UserDashboard />} /> {/* User Dashboard */}
-          <Route path="/payment" element={<PaymentForm />} /> {/* Payment form page */}
-        </Routes>
-      </div>
+      <ToastContainer />
+      <Routes>
+        {/* Use Layout to ensure Header is present on every page */}
+        <Route path="/" element={<Layout><HomePage /></Layout>} /> 
+        <Route path="/:userId" element={<Layout><HomePage /></Layout>} /> 
+        <Route path="/wedding-details/:id" element={<Layout><EnhancedWeddingDetails /></Layout>} /> 
+        <Route path="/:userId/wedding-details/:id" element={<Layout><EnhancedWeddingDetails /></Layout>} /> 
+        <Route path="/weddings" element={<Layout><ImageCard /></Layout>} />
+        <Route path="/:userId/weddings" element={<Layout><ImageCard /></Layout>} />
+        <Route path="/memories" element={<Layout><Memories /></Layout>} />
+        <Route path="/:userId/memories" element={<Layout><Memories /></Layout>} />
+        <Route path="/faqs" element={<Layout><FAQsPage /></Layout>} />
+        <Route path="/:userId/faqs" element={<Layout><FAQsPage /></Layout>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/guest/register" element={<Register />} />
+        <Route path="/guest/login" element={<Login />} />
+        <Route path="/success" element={<Layout><SuccessPayment /></Layout>} />
+        <Route path="/host/login" element={<HostLogin />} />
+        <Route path="/host/register" element={<HostRegister />} />
+        <Route path="/host/:id/hostform" element={<Layout><WeddingForm /></Layout>} />
+        <Route path="/host/:hostId/main" element={<Layout><HostMainPage /></Layout>} />
+        <Route path="/host/:hostId/userdashboard" element={<Layout><UserDashboard /></Layout>} />
+        <Route path="/userdashboard" element={<Layout><UserDashboard /></Layout>} />
+        <Route path="/payment" element={<Layout><PaymentForm /></Layout>} />
+      </Routes>
     </Router>
   );
 }

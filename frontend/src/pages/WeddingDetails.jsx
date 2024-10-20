@@ -2,92 +2,103 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import weddet1 from '../assets/weddet1.jpg';
 import weddet2 from '../assets/weddet2.jpg';
-// import {MakePayment} from "../pages/PaymentForm";
+import axios from 'axios'
+import { useParams } from "react-router-dom";
+
+// Moved CountdownTimer outside of the main component
+const CountdownTimer = ({ weddingDate }) => {
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  function calculateTimeLeft() {
+    const difference = +new Date(weddingDate) - +new Date();
+    let timeLeft = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60)
+      };
+    }
+
+    return timeLeft;
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [weddingDate]);
+
+  const timerComponents = Object.keys(timeLeft).map((interval) => {
+    if (!timeLeft[interval]) {
+      return null;
+    }
+
+    return (
+      <div key={interval} className="flex flex-col items-center">
+        <span className="text-4xl font-bold">{timeLeft[interval]}</span>
+        <span className="text-sm uppercase">{interval}</span>
+      </div>
+    );
+  });
+
+  return (
+    <div className="flex justify-center space-x-4 bg-primary/10 p-6 rounded-lg shadow-inner">
+      {timerComponents.length ? timerComponents : <span className="text-2xl font-bold">The big day is here!</span>}
+    </div>
+  );
+};
 
 export default function EnhancedWeddingDetails() {
+  const { userId, id } = useParams();
   const [ticketsLeft, setTicketsLeft] = useState(50);
-  const weddingDate = new Date("2024-08-15T16:00:00");
+  const [weddingData, setWeddingData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const params=useParams();
+  console.log(userId)
+  console.log(params)
 
   const carouselImages = [
     { src: weddet2, alt: "Sarah and John 1" },
     { src: weddet1, alt: "Sarah and John 2" },
   ];
 
-  const weddingDays = [
-    {
-      day: "Day 1",
-      date: "August 15, 2024",
-      place: "Grand Hotel, New York",
-      event: "Sangeet",
-      startTime: "7:00 PM",
-      accommodation: true,
-      transportation: true,
-      description: "The Sangeet is a joyous pre-wedding celebration filled with music, dance, and performances that reflect the rich culture and traditions of Indian weddings. Friends and family of the couple come together for an evening of laughter, entertainment, and heartfelt speeches. The night will feature choreographed dance performances by both families, traditional Indian music, and a lively atmosphere that will get everyone in the spirit of celebration. The venue will be decorated in vibrant colors to create a festive and energetic ambiance. Guests are encouraged to participate in the revelry by joining the dance floor, enjoying delicious food, and sharing in the happiness of the couple's upcoming nuptials.",
-      musicDancing: true,
-      dressCode: "Traditional Indian Attire"
-    },
-    {
-      day: "Day 2",
-      date: "August 16, 2024",
-      place: "Central Park, New York",
-      event: "Wedding Ceremony",
-      startTime: "4:00 PM",
-      accommodation: true,
-      transportation: true,
-      description: "The wedding ceremony is the heart of the celebrations, where the couple will exchange vows in a beautiful outdoor setting amidst the lush greenery of Central Park. The ceremony will blend traditional rituals with modern elegance, reflecting the couple's personal journey and love story. Surrounded by close family and friends, the couple will be united in a sacred bond during this meaningful event. Following the ceremony, guests will enjoy a reception with gourmet dining, live music, and dancing under the stars. Expect a sophisticated yet warm atmosphere, with stunning décor that complements the natural beauty of the surroundings. It's a day of love, celebration, and cherished memories that will last a lifetime.",
-      musicDancing: true,
-      dressCode: "Formal"
-    }
-  ];
-
-  const CountdownTimer = () => {
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-    function calculateTimeLeft() {
-      const difference = +weddingDate - +new Date();
-      let timeLeft = {};
-
-      if (difference > 0) {
-        timeLeft = {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        };
+  const fetchWeddingDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/weddings/${id}/`);
+      console.log(id)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      return timeLeft;
+      const data = await response.json();
+      setWeddingData(data);
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching wedding data:', error);
     }
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setTimeLeft(calculateTimeLeft());
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    });
-
-    const timerComponents = Object.keys(timeLeft).map((interval) => {
-      if (!timeLeft[interval]) {
-        return null;
-      }
-
-      return (
-        <div key={interval} className="flex flex-col items-center">
-          <span className="text-4xl font-bold">{timeLeft[interval]}</span>
-          <span className="text-sm uppercase">{interval}</span>
-        </div>
-      );
-    });
-
-    return (
-      <div className="flex justify-center space-x-4 bg-primary/10 p-6 rounded-lg shadow-inner">
-        {timerComponents.length ? timerComponents : <span className="text-2xl font-bold">The big day is here!</span>}
-      </div>
-    );
   };
+
+
+  useEffect(() => {
+    fetchWeddingDetails();
+  }, [id]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  if (!weddingData) {
+    return <div>Loading...</div>;
+  }
 
   const nextSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImages.length);
@@ -97,17 +108,50 @@ export default function EnhancedWeddingDetails() {
     setCurrentSlide((prevSlide) => (prevSlide - 1 + carouselImages.length) % carouselImages.length);
   };
 
-  useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  // const handlePurchaseTicket = async () => {
+  //   setLoading(true); // Start loading
+  
+  //   try {
+  //     console.log('Sending UserId:', userId); // Log userId for debugging
+  //     console.log('Wedding ID:', id); // Log wedding id for clarity
+  
+  //     const response = await axios.patch(`http://localhost:8000/api/weddings/${id}`, {
+  //       userId, // Send userId in request body
+  //     });
+  
+  //     if (response.status === 200) {
+  //       alert('User successfully added to guest list!');
+  //     } else {
+  //       console.warn('Unexpected response:', response);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating guest list:', error);
+  //     alert('Failed to add user to guest list. Please try again.');
+  //   } finally {
+  //     setLoading(false); // Stop loading
+  //   }
+  // };
 
-  const handlePurchaseTicket = () => {
-    if (ticketsLeft > 0) {
-      setTicketsLeft(ticketsLeft - 1);
-      setIsDialogOpen(false);
+  const handleRequestAccess = async (id, userId) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/weddings/${id}/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+      
+      if (response.ok) {
+        alert('Request sent to the host!');
+      } else {
+        alert('Failed to send request.');
+      }
+    } catch (error) {
+      console.error('Error sending request:', error);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-100 via-white to-rose-100">
@@ -140,9 +184,9 @@ export default function EnhancedWeddingDetails() {
               <ChevronRight className="w-6 h-6" />
             </button>
             <div className="absolute bottom-8 left-8 right-8 text-white">
-              <h1 className="text-6xl font-bold mb-4 text-white bg-clip-text">Sarah & John's Wedding</h1>
+              <h1 className="text-6xl font-bold mb-4 text-white bg-clip-text">{weddingData.groomName} & {weddingData.brideName}</h1>
               <p className="text-xl mb-6">Join us in celebrating our love</p>
-              <CountdownTimer />
+              <CountdownTimer weddingDate={weddingData.weddingDate} />
             </div>
           </div>
         </section>
@@ -151,10 +195,7 @@ export default function EnhancedWeddingDetails() {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl font-bold mb-6 text-primary text-center">Our Love Story</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Sarah and John's love story began five years ago when they met at a local coffee shop. 
-              Their shared passion for travel and adventure quickly bonded them, leading to countless 
-              memorable experiences around the world. Now, they're embarking on their greatest journey 
-              yet - marriage. Join us in celebrating their love and the start of their new life together!
+              {weddingData.ourStory}
             </p>
           </div>
         </section>
@@ -164,7 +205,7 @@ export default function EnhancedWeddingDetails() {
             onClick={() => setIsDialogOpen(true)}
             className="bg-primary hover:bg-primary/90 text-black text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            Get Your Ticket
+            Get Your Ticket at Rs.{weddingData.ticketPrice}
           </button>
         </section>
 
@@ -175,30 +216,93 @@ export default function EnhancedWeddingDetails() {
               <p className="mb-4">Tickets Left: {ticketsLeft}</p>
               <div className="flex justify-between">
                 <button onClick={() => setIsDialogOpen(false)} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
-                <button  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Purchase Ticket</button>
+                <button onClick={() => handleRequestAccess(id, userId)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Request for the Ticket</button>
               </div>
             </div>
           </div>
         )}
 
-        <section id="details" className="mb-20">
+<section id="details" className="mb-20">
           <h2 className="text-4xl font-bold mb-6 text-primary text-center">Wedding Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {weddingDays.map((day, index) => (
-              <div key={index} className="border p-6 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold mb-2">{day.day}</h3>
-                <p className="text-lg text-muted-foreground">Date: {day.date}</p>
-                <p className="text-lg text-muted-foreground">Place: {day.place}</p>
-                <p className="text-lg text-muted-foreground">Event: {day.event}</p>
-                <p className="text-lg text-muted-foreground">Start Time: {day.startTime}</p>
-                <p className="text-lg text-muted-foreground">Accommodation: {day.accommodation ? "Yes" : "No"}</p>
-                <p className="text-lg text-muted-foreground">Transportation: {day.transportation ? "Yes" : "No"}</p>
-                <p className="mt-4">{day.description}</p>
-                <p className="mt-2 font-bold">Dress Code: {day.dressCode}</p>
-              </div>
-            ))}
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Day 1 - {weddingData.day1.eventName}</h3>
+              <p className="text-lg text-muted-foreground">Date: {new Date(weddingData.day1.date).toLocaleDateString()}</p>
+              <p className="text-lg text-muted-foreground">Place: {weddingData.day1.place}</p>
+              <p className="text-lg text-muted-foreground">Music: {weddingData.day1.music}</p>
+              <p className="text-lg text-muted-foreground">Dress Code: {weddingData.day1.dressCode}</p>
+              <p className="text-lg text-muted-foreground">Time: {weddingData.day1.time}</p>
+            </div>
+
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Day 2 - {weddingData.day2.eventName}</h3>
+              <p className="text-lg text-muted-foreground">Date: {new Date(weddingData.day2.date).toLocaleDateString()}</p>
+              <p className="text-lg text-muted-foreground">Place: {weddingData.day2.place}</p>
+              <p className="text-lg text-muted-foreground">Music: {weddingData.day2.music}</p>
+              <p className="text-lg text-muted-foreground">Dress Code: {weddingData.day2.dressCode}</p>
+              <p className="text-lg text-muted-foreground">Time: {weddingData.day2.time}</p>
+            </div>
           </div>
         </section>
+
+        <section id="menu" className="mb-20">
+          <h2 className="text-4xl font-bold mb-6 text-primary text-center">Wedding Menu</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Appetizers</h3>
+              <ul className="list-disc list-inside">
+                {weddingData?.menu?.appetizers?.length ? (
+                  weddingData.menu.appetizers.map((item, index) => (
+                    <li key={index} className="text-lg text-muted-foreground">{item}</li>
+                  ))
+                ) : (
+                  <li className="text-lg text-muted-foreground">No appetizers available</li>
+                )}
+              </ul>
+            </div>
+
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Main Course</h3>
+              <ul className="list-disc list-inside">
+                {weddingData?.menu?.mainCourse?.length ? (
+                  weddingData.menu.mainCourse.map((item, index) => (
+                    <li key={index} className="text-lg text-muted-foreground">{item}</li>
+                  ))
+                ) : (
+                  <li className="text-lg text-muted-foreground">No main course available</li>
+                )}
+              </ul>
+            </div>
+
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Desserts</h3>
+              <ul className="list-disc list-inside">
+                {weddingData?.menu?.desserts?.length ? (
+                  weddingData.menu.desserts.map((item, index) => (
+                    <li key={index} className="text-lg text-muted-foreground">{item}</li>
+                  ))
+                ) : (
+                  <li className="text-lg text-muted-foreground">No desserts available</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </section>
+        <section id="transportation" className="mb-20">
+          <h2 className="text-4xl font-bold mb-6 text-primary text-center">Transportation & Accommodation</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Transportation</h3>
+              <p className="text-lg text-muted-foreground">{weddingData.transportation}</p>
+            </div>
+
+            <div className="border p-6 rounded-lg shadow-lg">
+              <h3 className="text-2xl font-semibold mb-2">Accommodation</h3>
+              <p className="text-lg text-muted-foreground">{weddingData.accommodation}</p>
+            </div>
+          </div>
+        </section>
+
       </main>
     </div>
   );

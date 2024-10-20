@@ -27,7 +27,7 @@ function WeddingForm() {
     ourStory: '',
     languages: '',
     menu: 'veg',
-    alcohol: 'no',
+    alcohol: 'Not Included',
     transportation: 'not included',
     accommodation: 'not included',
     day1: { eventName: '', place: '', date: '', description: '', music: 'no', dressCode: '', time: '' },
@@ -40,13 +40,20 @@ function WeddingForm() {
   // Retrieve hostId from user session or authentication context
   const hostId = "670751cb7e2e3b40f8e2d9ab"; // Replace with actual hostId from user session or context
 
-  // Handle input changes
+  // Handle input changes including file inputs
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: files ? [...files] : value,
-    }));
+    if (files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: [...files],  // Handling multiple file uploads
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   // Handle changes in day event fields
@@ -61,31 +68,35 @@ function WeddingForm() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Prepare wedding data including hostId
     const weddingData = { ...formData, hosts: [hostId] }; // Include hosts field here
-    
-    // Convert preWeddingImages to a format suitable for your API, if needed
+
+    // Convert preWeddingImages and other data into a suitable FormData format
     const formDataToSend = new FormData();
+
+    // Append regular fields
     Object.entries(weddingData).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-            value.forEach((file) => formDataToSend.append(key, file));
-        } else {
-            formDataToSend.append(key, value);
-        }
+      if (key === 'preWeddingImages') {
+        value.forEach((file) => formDataToSend.append('preWeddingImages', file));  // Handle multiple files
+      } else if (typeof value === 'object' && !Array.isArray(value)) {
+        formDataToSend.append(key, JSON.stringify(value));  // Convert nested objects (e.g., day1, day2) to JSON
+      } else {
+        formDataToSend.append(key, value);
+      }
     });
 
     try {
-        const response = await axios.post('http://localhost:8000/api/weddings/create', formDataToSend, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        console.log('Response:', response.data);
-        alert('Wedding created successfully!');
+      const response = await axios.post('http://localhost:8000/api/weddings/create', formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' }, // Important for file uploads
+      });
+      console.log('Response:', response.data);
+      alert('Wedding created successfully!');
     } catch (error) {
-        console.error('Error creating wedding:', error.response?.data || error.message);
-        alert('Failed to create wedding.');
+      console.error('Error creating wedding:', error.response?.data || error.message);
+      alert('Failed to create wedding.');
     }
-};
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -178,7 +189,7 @@ function WeddingForm() {
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{`Day ${index + 1} Event Details`}</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Card style={{ borderRadius: '8px', boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)' }}>
+                <Card style={{ borderRadius: '8px', boxShadow: 'none' }}>
                   <CardContent>
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
@@ -188,14 +199,17 @@ function WeddingForm() {
                         <TextField fullWidth label="Place" name="place" value={formData[day].place} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label="Date" name="date" type="date" value={formData[day].date} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
+                        <TextField fullWidth label="Date" name="date" value={formData[day].date} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label="Description" name="description" value={formData[day].description} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
+                        <TextField fullWidth label="Time" name="time" value={formData[day].time} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField fullWidth label="Description" name="description" value={formData[day].description} onChange={(e) => handleDayChange(day, e)} multiline rows={2} variant="outlined" size="small" />
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <FormControl fullWidth size="small">
-                          <InputLabel>Music Included</InputLabel>
+                          <InputLabel>Music</InputLabel>
                           <Select name="music" value={formData[day].music} onChange={(e) => handleDayChange(day, e)}>
                             <MenuItem value="yes">Yes</MenuItem>
                             <MenuItem value="no">No</MenuItem>
@@ -204,9 +218,6 @@ function WeddingForm() {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField fullWidth label="Dress Code" name="dressCode" value={formData[day].dressCode} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label="Time" name="time" type="time" value={formData[day].time} onChange={(e) => handleDayChange(day, e)} variant="outlined" size="small" />
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -217,7 +228,7 @@ function WeddingForm() {
         ))}
         {/* Submit Button */}
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Button variant="contained" color="primary" fullWidth type="submit">
             Create Wedding
           </Button>
         </Grid>

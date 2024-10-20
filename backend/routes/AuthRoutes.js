@@ -16,4 +16,7 @@ router.get('/protected', userController.verifyToken, (req, res) => {
 // Update User's Wedding ID
 router.put('/users/wedding', userController.verifyToken, userController.updateWedding);
 
+// Fetch User Details by ID (NEW GET API)
+router.get('/:id', userController.getUserById);
+
 module.exports = router;

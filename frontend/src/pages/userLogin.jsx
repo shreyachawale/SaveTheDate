@@ -29,8 +29,6 @@ const Login = () => {
         { withCredentials: true }
       );
       
-      console.log(data);
-
       // Check if the response contains errors
       if (data) {
         if (data.errors) {
@@ -38,8 +36,10 @@ const Login = () => {
           if (email) generateError(email); // Show email error
           if (password) generateError(password); // Show password error
         } else {
-          // Redirect on successful login
-          navigate("/");
+          // Redirect on successful login using userId
+          const userId = data.user.id; // Assuming user ID is present in the response
+          console.log(userId)
+          navigate(`/${userId}`); // Navigate to /:userId
         }
       }
     } catch (err) {

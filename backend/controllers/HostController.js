@@ -1,4 +1,5 @@
 const Host = require('../models/Host'); // Import Host model
+const Wedding = require('../models/WeddingDetails')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -82,3 +83,23 @@ module.exports.verifyToken = (req, res, next) => {
 
 }
 };
+
+module.exports.getWeddingsByHost = async (req, res) => {
+    const hostId = req.params.hostId;  // Get hostId from request params
+  
+    try {
+      // Find weddings where the 'hosts' field matches the provided hostId
+      const weddings = await Wedding.find({ hosts: hostId }).populate('hosts guests requests');
+  
+      if (weddings.length === 0) {
+        return res.status(404).json({ message: 'No weddings found for this host' });
+      }
+  
+      res.status(200).json({ weddings });
+    } catch (error) {
+      console.error('Error fetching weddings:', error);
+      res.status(500).json({ error: 'Server error while fetching weddings' });
+    }
+  };
+  
+

@@ -8,28 +8,21 @@ const weddingSchema = new mongoose.Schema({
   preWeddingImages: [{ type: String }], // Array of image URLs or paths
   ourStory: { type: String, required: true },
   languages: [{ type: String }], // Changed to array of strings
-  menu: {
-    appetizers: [{ type: String }],
-    mainCourse: [{ type: String }],
-    desserts: [{ type: String }]
-  }, // Changed to an object with arrays
-  alcohol: { type: String, enum: ['yes', 'no'], default: 'no' }, // Ensure to pass "yes" or "no"
-  transportation: {
-    type: { type: String },
-    provider: { type: String }
-  }, // Changed to an object
-  accommodation: {
-    hotelName: { type: String },
-    address: { type: String },
-    phone: { type: String }
-  }, // Changed to an object
+  menu: {type: String},
+  appetizers: [{ type: String }],
+  mainCourse: [{ type: String }],
+  desserts: [{ type: String }],
+// Changed to an object with arrays
+  alcohol: { type: String,  default: 'Not Included' }, // Ensure to pass "yes" or "no"
+  transportation:{ type: String,  default: 'Not Included' }, // Changed to an object
+  accommodation: { type: String,  default: 'Not Included' }, // Changed to an object
   
   day1: {
     eventName: { type: String },
     place: { type: String },
     date: { type: Date },
     description: { type: String },
-    music: { type: String, enum: ['yes', 'no'], default: 'no' },
+    music: { type: String,  default: 'no' },
     dressCode: { type: String },
     time: { type: String },
   },
@@ -39,13 +32,14 @@ const weddingSchema = new mongoose.Schema({
     place: { type: String },
     date: { type: Date },
     description: { type: String },
-    music: { type: String, enum: ['yes', 'no'], default: 'no' },
+    music: { type: String, default: 'no' },
     dressCode: { type: String },
     time: { type: String },
   },
   
   hosts: { type: mongoose.Schema.Types.ObjectId, ref: 'Host' }, // One-to-many with hosts
   guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Many-to-many with guests
+  requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 const Wedding = mongoose.model('Wedding', weddingSchema);

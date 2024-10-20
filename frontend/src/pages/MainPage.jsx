@@ -1,57 +1,69 @@
-// HomePage.js
-import { useNavigate } from 'react-router-dom';
-import Carousel from '../components/Carousal'
-
-import PaymentButton from '../components/PaymentButton'
-import TestimonialsPage from '../components/Testimonials'
+import { useNavigate, useParams } from 'react-router-dom';
+import Carousel from '../components/Carousal';
+import PaymentButton from '../components/PaymentButton';
+import TestimonialsPage from '../components/Testimonials';
 import { useCookies } from "react-cookie";
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-// import AuthPage from './HostAuth'
+import PaymentForm from '../components/upi';
 
 export default function HomePage() {
-   const [ishost,setHost]=useState(false);
+  const [isHost, setHost] = useState(false);
+  const [userData, setUserData] = useState(null); // To store user data
   const navigate = useNavigate();
-  const [cookies, setCookie,removeCookie] = useCookies([]);
+  const [cookies, setCookie, removeCookie] = useCookies([]);
+  const { userId } = useParams(); // Get userId from URL params
+
   useEffect(() => {
     const verifyUser = async () => {
-      try{
-      
-      
-      
-        const{data}=await axios.post('http://localhost:8000/',{},{withCredentials:true})
-        if(!data.status){
-          removeCookie("jwt")
-          navigate('/login')
-        }else{ toast(`HEY ${data.user.name}`)}
-      }
-    catch(err){
-      console.log(err)
-    }
-  }
+      try {
+        // Fetch user authentication status (assuming the endpoint is at root `/`)
+        const { data } = await axios.get(`http://localhost:8000/api/guests/${userId}`, {
+          withCredentials: true,
+        });
         
-      
-  
-    const logout=()=>{
-      removeCookie("jwt")
-      navigate("/register")
-    }
+        console.log(userId)
+        console.log(data)
+        setUserData(data)
+        
+        
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     verifyUser();
-  }, [cookies,setCookie,removeCookie,navigate])
+  }, [cookies, removeCookie, navigate, userId]);
+
+  const logout = () => {
+    removeCookie("jwt");
+    navigate("/register");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <Carousel />
+        {/* Display user data if available */}
+        {userData && (
+          <div className="text-center mt-6">
+            <h1 className="text-2xl font-bold">Hello, {userData.name}!</h1>
+            <p>Your email: {userData.email}</p>
+            <button onClick={logout} className="mt-4 bg-red-500 text-white py-2 px-4 rounded">
+              Logout
+            </button>
+          </div>
+        )}
       </main>
-      <TestimonialsPage/>
+      <TestimonialsPage />
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
           &copy; 2023 WeddingAbroad. All rights reserved.
         </div>
       </footer>
-    {/* <AuthPage/> */}
-      <PaymentButton/>
+      <PaymentButton />
+      <PaymentForm/>
     </div>
-  )
+  );
 }

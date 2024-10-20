@@ -13,4 +13,6 @@ router.get('/protected', authController.verifyToken, (req, res) => {
     res.json({ message: 'Protected route accessed' });
 });
 
+router.get('/:hostId/weddings', authController.getWeddingsByHost);
+
 module.exports = router;

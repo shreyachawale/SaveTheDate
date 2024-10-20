@@ -9,7 +9,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,17 +23,20 @@ export default function Register() {
       });
       if (response.status === 201) {
         toast.success("Registration successful!");
+        navigate('/guest/login')
       }
+  
     } catch (err) {
       const message = err.response?.data?.message || "Registration failed. Please try again.";
       toast.error(message);
     }
+    
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Register as Host</h1>
+        <h1 className="text-2xl font-bold mb-6">Register as Guest</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-2 font-semibold">Name</label>
@@ -75,8 +78,13 @@ export default function Register() {
             />
           </div>
           <div className="flex">
-            <p>Dont have an account?</p>
-            <Link href='/host/register'> Register</Link>
+            <p>Already have an account?</p>
+            <button
+            type="submit"
+              className="text-blue-500 px-2">
+                  <Link to='/guest/login'> Login</Link>
+            </button>
+            
           </div>
           <button
             type="submit"
