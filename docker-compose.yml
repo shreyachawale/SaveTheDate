@@ -1,0 +1,46 @@
+
+services:
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"       # Map port 3000 of the host to port 3000 in the container
+    volumes:
+      - ./frontend:/app   # Mount local frontend directory into the container
+      - /app/node_modules  # Avoid overwriting node_modules inside the container
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # For hot-reloading during development
+    depends_on:
+      - backend                     # Ensure backend starts before frontend
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"       # Map port 8000 of the host to port 8000 in the container
+    volumes:
+      - ./backend:/app    # Mount local backend directory into the container
+      - /app/node_modules  # Avoid overwriting node_modules inside the container
+    environment:
+      - PORT=${PORT}                  # Port set via the .env file
+      - MONGODB_URI=${MONGODB_URI}    # MongoDB connection string
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}  # Stripe API secret key
+    depends_on:
+      - mongodb                    # Ensure MongoDB starts before backend
+
+  # MongoDB Service
+  mongodb:
+    image: mongo:5.0               # Use official MongoDB image
+    restart: always                # Restart policy to keep the container running
+    ports:
+      - "27017:27017"              # Expose MongoDB on port 27017
+    volumes:
+      - mongo-data:/data/db        # Persist MongoDB data in a named volume
+
+# Define the volumes
+volumes:
+  mongo-data:                      # Named volume for MongoDB persistence
